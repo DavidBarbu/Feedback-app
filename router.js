@@ -4,7 +4,7 @@ const {getAllCourses, getCourseById,
     getAllStudents, getStudentById, createStudent, updateStudent, deleteStudent,
     getAllProfessors, getProfessorById, createProfessor, updateProfessor, deleteProfessor,
 } = require('./controllers/users')
-
+const db = require("./models");
 
 
 const  credential = {
@@ -14,6 +14,7 @@ const  credential = {
 
 // login user
 router.post('/login', (req, res)=>{
+    
     if(req.body.email == credential.email && req.body.password == credential.password){
         console.log("ie bune alea");
         req.session.user = req.body.email;

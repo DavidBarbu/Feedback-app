@@ -1,43 +1,24 @@
 'use strict';
-const faker = require('faker');
+
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkInsert('Students', [
-      {
-        id: 1,
-        email: "dada@da.da",
-        firstName: "Da",
-        lastName: "Nu",
+
+    const data = [];
+    for(let i=0;i<100;i++)
+    {
+      data.push({
+        id: i,
+        email: i+"@s.unibuc.ro",
+        firstName: i+""+i,
+        lastName: i-1+""+(i-1),
+        password: "parola"+i,
         createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: 2,
-        email: "daada@da.da",
-        firstName: "Da",
-        lastName: "Nu",
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: 3,
-        email: "dadaaa@da.da",
-        firstName: "Da",
-        lastName: "Nu",
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: 4,
-        email: "admin@s.unibuc.ro",
-        firstName: "Admin",
-        lastName: "Admin",
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      
-    ]);
+        updatedAt: new Date(),
+      });
+    }
+    await queryInterface.bulkInsert('Students', data, {});
+
     /**
      * Add seed commands here.
      *
@@ -56,5 +37,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
+    await queryInterface.bulkDelete("Students", null, {});
   }
 };
