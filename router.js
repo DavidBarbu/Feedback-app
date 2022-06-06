@@ -3,7 +3,8 @@ var router = express.Router();
 const {getAllCourses, getCourseById,
     getAllStudents, getStudentById, createStudent, updateStudent, deleteStudent,
     getAllProfessors, getProfessorById, createProfessor, updateProfessor, deleteProfessor,
-} = require('./controllers/users')
+} = require('./controllers/users');
+const { sequelize } = require("./models");
 const db = require("./models");
 
 
@@ -15,6 +16,34 @@ const  credential = {
 // login user
 router.post('/login', (req, res)=>{
     
+    let email = req.body.email;
+	let password = req.body.password;
+	
+	// sequelize.query('SELECT * FROM Students WHERE email = '+email+' AND password = '+password+' ',{model: db.Students})
+    // if (email && password) {
+    //     console.log(email, password)
+		
+	// 	db.get('SELECT * FROM Students WHERE email = ? AND password = ?', [email, password], function(error, results, fields) {
+			
+	// 		if (error) throw error;
+			
+	// 		if (results.length > 0) {
+				
+	// 			req.session.loggedin = true;
+	// 			req.session.username = username;
+				
+	// 			res.redirect('/route/dashboard');
+	// 		} else {
+	// 			res.send('Incorrect Username and/or Password!');
+	// 		}			
+	// 		res.end();
+	// 	});
+	// } else {
+	// 	res.send('Please enter Username and Password!');
+	// 	res.end();
+	// }
+
+
     if(req.body.email == credential.email && req.body.password == credential.password){
         console.log("ie bune alea");
         req.session.user = req.body.email;
