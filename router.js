@@ -14,11 +14,30 @@ const  credential = {
 }
 
 // login user
-router.post('/login', (req, res)=>{
+router.post('/login', async (req, res,next)=>{
     
-    let email = req.body.email;
-	let password = req.body.password;
-	
+    let req_email = req.body.email;
+	let req_password = req.body.password;
+	let rez =await db.Student.findAll({
+        where: {
+          email: req_email,
+        }
+      });
+      //console.log('REZ1',rez)
+      console.log('req_email, rez[0].email, req_password, rez[0].password\n', req_email.toString(), rez[0].email.toString(), req_password, rez[0].password
+      )
+    if(req_email.toString() === rez[0].email.toString() && req_password.toString() === rez[0].password.toString()){
+        console.log("ie bune alea");
+        req.session.user = req.body.email;
+        res.redirect('/route/dashboard');
+        //res.end("Login Successful...!");
+    }else{
+        console.log("nu ie bune alea");
+        //alert("Ceva nu ie bine dă ce mă-ntrebi?");
+        res.end("Invalid")
+    }
+
+      //console.log('REZ2',rez)
 	// sequelize.query('SELECT * FROM Students WHERE email = '+email+' AND password = '+password+' ',{model: db.Students})
     // if (email && password) {
     //     console.log(email, password)
@@ -44,16 +63,16 @@ router.post('/login', (req, res)=>{
 	// }
 
 
-    if(req.body.email == credential.email && req.body.password == credential.password){
-        console.log("ie bune alea");
-        req.session.user = req.body.email;
-        res.redirect('/route/dashboard');
-        //res.end("Login Successful...!");
-    }else{
-        console.log("nu ie bune alea");
-        //alert("Ceva nu ie bine dă ce mă-ntrebi?");
-        res.end("Invalid")
-    }
+    // if(req.body.email == credential.email && req.body.password == credential.password){
+    //     console.log("ie bune alea");
+    //     req.session.user = req.body.email;
+    //     res.redirect('/route/dashboard');
+    //     //res.end("Login Successful...!");
+    // }else{
+    //     console.log("nu ie bune alea");
+    //     //alert("Ceva nu ie bine dă ce mă-ntrebi?");
+    //     res.end("Invalid")
+    // }
 });
 
 // route for dashboard
