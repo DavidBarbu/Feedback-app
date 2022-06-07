@@ -49,12 +49,30 @@ module.exports.deleteStudent = (req, res) => {
 }
 
 //Professors
-module.exports.getAllProfessors = (req, res) => {
-    res.render('base', { title: "Login System" });
+module.exports.getAllProfessors =async (req, res) => {
+    try {
+        const allProfessors = await db.Professor.findAll();
+        res.send(allProfessors);
+    } catch (error) {
+        console.error("N-a mers ceva");
+        res.send({
+            error: "Ceva nu ie bine",
+        });
+    };
 }
 
-module.exports.getProfessorById = (req, res) => {
-    res.render('dashboard', { title: "Login System" });
+module.exports.getProfessorById = async (req, res) => {
+    const professorId = req.params.id;
+    try {
+        console.log(professorId)
+        const professor = await db.Professor.findByPk(professorId);
+        res.send(professor);
+    } catch (error) {
+        console.error(error);
+        res.send({
+            error: "Something went wrong",
+        });
+    }
 }
 
 module.exports.createProfessor = (req, res) => {

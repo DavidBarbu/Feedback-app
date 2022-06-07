@@ -5,7 +5,7 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
 
     const data = [];
-    for(let i=0;i<100;i++)
+    for(let i=1;i<100;i++)
     {
       data.push({
         id: i,
@@ -17,6 +17,16 @@ module.exports = {
         updatedAt: new Date(),
       });
     }
+    data.push({
+      id: 0,
+      email: "david.barbu@s.unibuc.ro",
+      firstName: "Barbu",
+      lastName: "David Emanuel",
+      password: "parolatest",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
     await queryInterface.bulkInsert('Students', data, {});
 
     /**

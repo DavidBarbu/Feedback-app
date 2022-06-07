@@ -24,9 +24,10 @@ router.post('/login', async (req, res,next)=>{
         }
       });
       //console.log('REZ1',rez)
-      console.log('req_email, rez[0].email, req_password, rez[0].password\n', req_email.toString(), rez[0].email.toString(), req_password, rez[0].password
-      )
-    if(req_email.toString() === rez[0].email.toString() && req_password.toString() === rez[0].password.toString()){
+      
+    
+    
+      if(req_email.toString() === rez[0].email.toString() && req_password.toString() === rez[0].password.toString()){
         console.log("ie bune alea");
         req.session.user = req.body.email;
         res.redirect('/route/dashboard');
@@ -36,8 +37,9 @@ router.post('/login', async (req, res,next)=>{
         //alert("Ceva nu ie bine dă ce mă-ntrebi?");
         res.end("Invalid")
     }
+    console.log('req_email, rez[0].email, req_password, rez[0].password\n', req_email.toString(), rez[0].email.toString(), req_password, rez[0].password)
 
-      //console.log('REZ2',rez)
+    //console.log('REZ2',rez)
 	// sequelize.query('SELECT * FROM Students WHERE email = '+email+' AND password = '+password+' ',{model: db.Students})
     // if (email && password) {
     //     console.log(email, password)
