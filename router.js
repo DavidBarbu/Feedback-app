@@ -7,12 +7,6 @@ const {getAllCourses, getCourseById,
 const { sequelize } = require("./models");
 const db = require("./models");
 
-
-const  credential = {
-    email : "admin@s.unibuc.ro",
-    password : "admin123"
-}
-
 // login user
 router.post('/login', async (req, res,next)=>{
     
@@ -24,8 +18,11 @@ router.post('/login', async (req, res,next)=>{
         }
       });
       //console.log('REZ1',rez)
+      console.log("aici e req.body.email: ", req.body.email);
       
     
+    try{
+
     
       if(req_email.toString() === rez[0].email.toString() && req_password.toString() === rez[0].password.toString()){
         console.log("ie bune alea");
@@ -35,9 +32,13 @@ router.post('/login', async (req, res,next)=>{
     }else{
         console.log("nu ie bune alea");
         //alert("Ceva nu ie bine dă ce mă-ntrebi?");
-        res.end("Invalid")
+        res.end("Parola incorecta")
     }
-    console.log('req_email, rez[0].email, req_password, rez[0].password\n', req_email.toString(), rez[0].email.toString(), req_password, rez[0].password)
+      console.log('req_email, rez[0].email, req_password, rez[0].password\n', req_email.toString(), rez[0].email.toString(), req_password, rez[0].password) 
+    }catch(e){
+        console.error(e)
+        res.send("Email doesn't exist!");
+    }
 
     //console.log('REZ2',rez)
 	// sequelize.query('SELECT * FROM Students WHERE email = '+email+' AND password = '+password+' ',{model: db.Students})
@@ -81,6 +82,7 @@ router.post('/login', async (req, res,next)=>{
 router.get('/dashboard', (req, res) => {
     if(req.session.user){
         res.render('dashboard', {user : req.session.user})
+        console.log("aici e req.body.email: ",req.email);
     }else{
         res.send("Unauthorize User")
     }
@@ -93,9 +95,23 @@ router.get('/logout', (req ,res)=>{
             console.log(err);
             res.send("Error")
         }else{
+            req.session.user=null;
             res.render('base', { title: "Express", logout : "logout Successfully...!"})
         }
     })
+})
+
+// route for questionnaire
+router.get('/chestionar', (req, res) => {
+    res.render('chestionar')
+    console.log("aici e req.body.email: ", req.body.email);
+})
+
+router.post('/chestionar', (req, res) => {
+    console.log("merge da");
+    console.log("aici e req.body.email: ", req.body.user);
+    
+    res.send("da frt merge");
 })
 
 //cursuri
