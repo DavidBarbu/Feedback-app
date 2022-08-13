@@ -3,13 +3,14 @@ const path = require('path');
 const bodyparser = require("body-parser");
 const session = require("express-session");
 const { v4: uuidv4 } = require("uuid");
-
+const jwt = require('jsonwebtoken');
 
 const router = require('./router');
 
 const app = express();
 
 const port = process.env.PORT || 3000;
+
 
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }))
@@ -26,6 +27,7 @@ app.use(session({
     saveUninitialized: false
 }));
 
+
 app.use('/route', router);
 
 // home route
@@ -36,6 +38,6 @@ app.get('/', (req, res) =>{
 
 app.listen(port, ()=>
     {
-        console.log("S-a dăschis servăru' pă", port, "dă ce mă-ntrebi?")
+        console.log("S-a dășchis servăru' pă", port, "dă ce mă-ntrebi?")
     }
 );
