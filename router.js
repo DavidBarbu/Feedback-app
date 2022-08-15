@@ -25,10 +25,6 @@ router.post('/login', async (req, res) => {
         name: "Obaseki Nosa",
         location: "Lagos",
     }
-    
-    window.localStorage.setItem('user', JSON.stringify(person));
-
-
 
     const email = body.email;
     const password = body.password;
@@ -67,7 +63,7 @@ router.post('/login', async (req, res) => {
                 //res.render("dashboard");
 
                 //console.log("x access token: ", req.headers['authorization'])
-                console.log('ID user din token:', storage.getItem('id'))
+                //console.log('ID user din token:', storage.getItem('id'))
 
             } else {
                 res.send("Nu s bune")
