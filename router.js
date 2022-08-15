@@ -19,13 +19,6 @@ router.post('/login', async (req, res) => {
     const authorization = req.headers.authorization;
     const body = req.body;
 
-
-    //localStorage.setItem("a:", "storage aici asa frumos")
-    const person = {
-        name: "Obaseki Nosa",
-        location: "Lagos",
-    }
-
     const email = body.email;
     const password = body.password;
 
@@ -59,7 +52,7 @@ router.post('/login', async (req, res) => {
                 //res.send({
                 //    token,
                 //});
-                res.json({"Token": vrf})
+                res.status(200).json({"Token_bun": vrf})
                 //res.render("dashboard");
 
                 //console.log("x access token: ", req.headers['authorization'])
@@ -77,7 +70,7 @@ router.post('/login', async (req, res) => {
 });
 
 // route for dashboard
-router.get('/dashboard', (req, res) => {
+router.get('/dashboard',authorizationMiddleware, (req, res) => {
     res.render('dashboard')
 })
 
