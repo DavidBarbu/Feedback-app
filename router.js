@@ -88,6 +88,7 @@ router.post('/chestionar/:id', (req, res) => {
 //cursuri
 router.get("/cursuri", authorizationMiddleware => {
     res.render('base', { title: "Express", logout: "logout Successfully...!" })
+})
 router.get("/curs/:id", getCourseById);
 
 //studenti @s.unibuc.ro
