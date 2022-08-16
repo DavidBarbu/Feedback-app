@@ -17,18 +17,25 @@
                     <input id="password" type="password" class="form-control" name="password" placeholder="password">
                 </div>
                 <button id="get" class="btn btn-success rounded-pill">Submit/GET</button>
+                
             </form>
-
+            <button id="remove" onclick="rmvBtn()" class="btn btn-success rounded-pill">Remove localstorage</button>
             <script>
+
+                
                 console.log("a ajuns aici")
                 const getBtn = document.getElementById("get");
+                function rmvBtn(){
+                    console.log("remove aici")
+                    window.localStorage.removeItem('token');
+                }
 
                 //console.log(userEmail)
                 //console.log(userPassword.value)
                 const baseUrl = 'http://localhost:3000/route/login'
 
                 getBtn.addEventListener("click", getInfo)
-
+                
                 async function getInfo(e) {
                     e.preventDefault();
                     var userEmail = document.getElementById("email");
@@ -46,12 +53,13 @@
                         })
                     console.log("a ajuns aici")
                     console.log("aici e res: ", res.body)
-                    res.json().then(body => console.log("token:", body));
-                    //let b  = await res.json().then(body => window.sessionStorage.setItem('token', body));
+                    let asa = ""
+                    
+                    const content = await res.json();
+                    console.log("content: ", content);
 
-                    window.sessionStorage.setItem('token', res.body);
-                    //window.sessionStorage.setItem('token', token)
-                    //console.log("Token:", window.sessionStorage.getItem('token'));
+                    window.localStorage.setItem('token', content.token);
+                    
                 }
             </script>
 

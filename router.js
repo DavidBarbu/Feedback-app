@@ -27,22 +27,22 @@ router.post('/login', async (req, res) => {
     console.log("password: ", password)
 
     let rez = await db.Student.findAll({ where: { email: email, } });
-    console.log("rez: ", rez)
+    //console.log("rez: ", rez)
 
     if (rez.length === 0) {
-        res.json({"Nu a gasit datele in baza de date!": "haha"})
+        res.json({ "Nu a gasit datele in baza de date!": "haha" })
     } else {
         const id = rez[0].id.toString()
 
         try {
             if (email.toString() === rez[0].email.toString() && password.toString() === rez[0].password.toString()) {
-                console.log("User & password found in database!") ;
+                console.log("User & password found in database!");
                 const token = jwt.sign({ id }, SECRET_KEY);
 
                 let vrf = jwt.verify(token, SECRET_KEY)
 
                 console.log("Tokenul s-a generat si este urmatorul: ", token)
-                res.status(200).json({token})
+                res.status(200).json({ token })
 
             } else {
                 res.send("Nu s bune")
@@ -57,7 +57,7 @@ router.post('/login', async (req, res) => {
 
 router.get('/auth', (req, res) => {
     const token = req.headers.authorization
-    res.json({"token": token})
+    res.json({ "token": token })
 })
 
 // route for dashboard
@@ -86,7 +86,8 @@ router.post('/chestionar/:id', (req, res) => {
 })
 
 //cursuri
-router.get("/cursuri", getAllCourses);
+router.get("/cursuri", authorizationMiddleware => {
+    res.render('base', { title: "Express", logout: "logout Successfully...!" })
 router.get("/curs/:id", getCourseById);
 
 //studenti @s.unibuc.ro
