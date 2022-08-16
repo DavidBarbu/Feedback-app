@@ -11,12 +11,13 @@ const app = express();
 
 const port = process.env.PORT || 3000;
 
-
+app.use(express.json())
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }))
 
 app.set('view engine', 'ejs');
-
+app.use('/static', express.static(path.join(__dirname, 'public')))
+app.use('/assets', express.static(path.join(__dirname, 'public/assets')))
 app.use('/route', router);
 
 // home route

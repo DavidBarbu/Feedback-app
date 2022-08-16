@@ -12,9 +12,8 @@ const { SECRET_KEY } = require("./config/jwt");
 const bodyparser = require("body-parser");
 const { localStorage } = require('node-localstorage')
 
-
-
 // login user
+
 router.post('/login', async (req, res) => {
     const authorization = req.headers.authorization;
     const body = req.body;
@@ -24,17 +23,14 @@ router.post('/login', async (req, res) => {
 
     console.log("authorization: ", authorization)
     console.log("body: ", body)
-
     console.log("username: ", email)
     console.log("password: ", password)
 
-    console.log(body.email)
-    console.log(body.password)
-    
     let rez = await db.Student.findAll({ where: { email: email, } });
+    console.log("rez: ", rez)
 
     if (rez.length === 0) {
-        res.send("Nu a gasit datele in baza de date!")
+        res.json({"Nu a gasit datele in baza de date!": "haha"})
     } else {
         const id = rez[0].id.toString()
 
@@ -45,18 +41,8 @@ router.post('/login', async (req, res) => {
 
                 let vrf = jwt.verify(token, SECRET_KEY)
 
-                //storage.setItem("id", vrf.id)
-
-
-                console.log("Token: ", token)
-                //res.send({
-                //    token,
-                //});
-                res.status(200).json({"Token_bun": vrf})
-                //res.render("dashboard");
-
-                //console.log("x access token: ", req.headers['authorization'])
-                //console.log('ID user din token:', storage.getItem('id'))
+                console.log("Tokenul s-a generat si este urmatorul: ", token)
+                res.status(200).json({token})
 
             } else {
                 res.send("Nu s bune")
@@ -69,21 +55,26 @@ router.post('/login', async (req, res) => {
     }
 });
 
+router.get('/auth', (req, res) => {
+    const token = req.headers.authorization
+    res.json({"token": token})
+})
+
 // route for dashboard
-router.get('/dashboard',authorizationMiddleware, (req, res) => {
+router.get('/dashboard', (req, res) => {
     res.render('dashboard')
 })
 
 // route for logout
-router.get('/logout', authorizationMiddleware, (req, res) => {
+router.get('/logout', (req, res) => {
+    //const token = req.headers.authorization
+    //console.log('token:', token)
     res.render('base', { title: "Express", logout: "logout Successfully...!" })
 })
 
 // route for questionnaire
 router.get('/chestionar', async (req, res) => {
     let rez = await db.Professor.findAll();
-
-
     res.send(rez)
 })
 
