@@ -4,15 +4,8 @@ module.exports = {
     await queryInterface.createTable('Feedbacks', {
       id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-      id_student: {
-        allowNull: false,
-        type: Sequelize.INTEGER
-      },
-      id_profesor: {
-        allowNull: false,
         type: Sequelize.INTEGER
       },
       Question1: {
@@ -22,9 +15,6 @@ module.exports = {
         type: Sequelize.STRING
       },
       Question3: {
-        type: Sequelize.STRING
-      },
-      Materie: {
         type: Sequelize.STRING
       },
       createdAt: {

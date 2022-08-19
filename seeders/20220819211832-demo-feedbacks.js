@@ -1,31 +1,33 @@
 'use strict';
 
+const { json } = require("body-parser");
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
 
     const data = [];
-    let k=0
-    for (let i = 1; i < 101; i++)
-      for (let j = 0; j < 100; j++) {
-        k++;
+    for (let i = 1; i < 100; i++)
+      for (let j = 1; j < 100; j++) {
         data.push({
-          id:k,
           id_student: i,
           id_profesor: j,
-          //Question1: "Cum vi s-a parut cursul?",
-          //Question2: "Ce nota ii dati profesorului?",
-          //Question3: "Aveti ceva de adaugat?",
-          Materie: "",
-          
-          Question1: "",
-          Question2: "",
-          Question3: "",
-
+          Question1: "Cum ti s-a parut cursul?",
+          Question2: "Ce nota ii dai profesorului?",
+          Question3: "Altceva?",
           createdAt: new Date(),
           updatedAt: new Date(),
         });
       }
     await queryInterface.bulkInsert('Feedbacks', data, {});
+    /**
+     * Add seed commands here.
+     *
+     * Example:
+     * await queryInterface.bulkInsert('People', [{
+     *   name: 'John Doe',
+     *   isBetaMember: false
+     * }], {});
+    */
   },
 
   down: async (queryInterface, Sequelize) => {

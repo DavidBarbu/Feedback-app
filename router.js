@@ -11,36 +11,53 @@ const jwt = require('jsonwebtoken');
 const { SECRET_KEY } = require("./config/jwt");
 const bodyparser = require("body-parser");
 const { localStorage } = require('node-localstorage')
+var cookieParser = require('cookie-parser');
 
-// login user
 
-router.post('/auth', async (req, res) => {
-    //const authorization = req.headers['x-access-token'];
+// verify user
+router.post('/verify', async (req, res) => {
     const body = req.body;
-
     const email = body.email;
     const password = body.password;
-
-    //console.log("authorization: ", authorization)
-    console.log("body: ", body)
-    console.log("username: ", email)
-    console.log("password: ", password)
-
+    console.log("Username: ", email, ", Password: ", password)
     let rez = await db.Student.findAll({ where: { email: email, } });
-    //console.log("rez: ", rez)
-
+    console.log("rez: ", rez.length)
     if (rez.length === 0) {
-        res.json({ "Nu a gasit datele in baza de date!": "haha" })
+        let rez = await db.Professor.findAll({ where: { email: email, } });
+        if (rez.length === 0) {
+            res.send("Nu exista un cont cu acest email.");
+        } else {
+            const id = rez[0].id.toString()
+            const userType = rez[0].userType.toString()
+            console.log("id: ", id, ", userType: ", userType)
+            try {
+                if (email.toString() === rez[0].email.toString() && password.toString() === rez[0].password.toString()) {
+                    const token = jwt.sign({ id, userType }, SECRET_KEY);
+                    console.log("Tokenul s-a generat si este urmatorul: ", token)
+                    res
+                        .cookie("access_token", token, {
+                            httpOnly: true,
+                            secure: process.env.NODE_ENV === "production",
+                        })
+                        .status(200)
+                        .json({ message: "Logged in successfully 😊 👌" });
+
+                } else {
+                    res.json("Nu s bune")
+                }
+
+            } catch (e) {
+                console.log("eroare in try")
+                console.error(e)
+            }
+        }
     } else {
         const id = rez[0].id.toString()
-
+        const userType = rez[0].userType.toString()
+        console.log("id: ", id, ", userType: ", userType)
         try {
             if (email.toString() === rez[0].email.toString() && password.toString() === rez[0].password.toString()) {
-                console.log("User & password found in database!");
-                const token = jwt.sign({ id }, SECRET_KEY);
-
-                let vrf = jwt.verify(token, SECRET_KEY)
-
+                const token = jwt.sign({ id, userType }, SECRET_KEY);
                 console.log("Tokenul s-a generat si este urmatorul: ", token)
                 res
                     .cookie("access_token", token, {
@@ -49,6 +66,7 @@ router.post('/auth', async (req, res) => {
                     })
                     .status(200)
                     .json({ message: "Logged in successfully 😊 👌" });
+
             } else {
                 res.json("Nu s bune")
             }
@@ -60,18 +78,18 @@ router.post('/auth', async (req, res) => {
     }
 });
 
+// route for login
 router.get('/login', (req, res) => {
     res.render('login')
 })
 
 // route for dashboard
 router.get('/dashboard', authorizationMiddleware, (req, res) => {
-    console.log("a ajuns la renderul de la dashboard")
     res.render('dashboard')
 })
 
 // route for logout
-router.get('/logout', authorizationMiddleware, (req, res) => {
+router.get('/logout', (req, res) => {
     return res
         .clearCookie("access_token")
         .status(200)
@@ -84,13 +102,36 @@ router.get('/chestionar', authorizationMiddleware, async (req, res) => {
     res.send(rez)
 })
 
-router.post('/chestionar/:id', (req, res) => {
-    console.log("post chestionar");
-    //console.log("aici e req.body.email: ", req.body.user);
-    res.send("da frt merge");
-    //res.render('chestionar')
+//student profile
+router.get('/myStudentProfile', authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    if (userType === "student") {
+        profile = await db.Student.findByPk(req.body.userId)
+    }
+    else {
+        res.send({ error: "Student account not found!" });
+    }
+    res.json(profile)
 })
 
+//professor profile
+router.get('/myProfessorProfile', authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    if (userType === "profesor") {
+        profile = await db.Student.findByPk(req.body.userId)
+    }
+    else {
+        res.send({ error: "Professor account not found!" });
+    }
+    res.json(profile)
+})
+
+router.get('/chestionar/:id', authorizationMiddleware, (req, res) => {
+    res.render('chestionar')
+})
+router.post('/chestionar/:id', authorizationMiddleware, (req, res) => {
+    res.render('chestionar')
+})
 //cursuri
 router.get("/cursuri", authorizationMiddleware => {
     res.render('login', { title: "Express", logout: "logout Successfully...!" })

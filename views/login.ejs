@@ -16,10 +16,9 @@
                     <input id="password" type="password" class="form-control" name="password" placeholder="password">
                 </div>
                 <button id="get"  class="btn btn-success rounded-pill">Submit/GET</button>
-
+                <a href='/route/dashboard' class="btn btn-success rounded-pill">Dashboard</a>
             </form>
-            <button id="remove" onclick="rmvBtn()" class="btn btn-success rounded-pill">Remove localstorage</button>
-            <a href="/route/dashboard">Dashboard</a>
+            
 
             <script>
 
@@ -31,7 +30,7 @@
                 //     window.localStorage.removeItem('token');
                 // }
 
-                const baseUrl = 'http://localhost:3000/route/auth'
+                const baseUrl = 'http://localhost:3000/route/verify'
 
                 getBtn.addEventListener("click", getInfo)
 
@@ -50,22 +49,6 @@
                             },
                             body: JSON.stringify(cred)
                         })
-                    //console.log("a ajuns aici")
-                    //console.log("aici e res: ", res.body)
-
-                    //const content = await res.json();
-                    //console.log("content: ", content);
-
-                    //window.localStorage.setItem('token', content.token);
-
-                    // const ftch = fetch('http://localhost:3000/route/dashboard',
-                    //     {
-                    //         method: 'GET',
-                    //         headers: {
-                    //             'Content-Type': 'application/json',
-                    //             'x-access-token': window.localStorage.getItem('token'),
-                    //         },
-                    //     })
                 }
 
             </script>
