@@ -4,12 +4,16 @@ const jwt = require('jsonwebtoken'),
 
 
 const authorizationMiddleware = (req, res, next) => {
-    const authorization = req.headers.authorization;
-    console.log("AUTH: ", authorization)
-    if (authorization) {
+    const token = req.cookies.access_token;
+    //const authorization = req.headers['x-access-token'];
+    //console.log("AUTH: ", authorization)
+    console.log("TOKEN: ", token)
+    if (token) {
         try {
-            const decoded = jwt.verify(authorization.replace('Bearer ', ''), SECRET_KEY);
+            const decoded = jwt.verify(token.replace('Bearer ', ''), SECRET_KEY);
             console.log("token decodat: ", decoded);
+            //req.userRole = data.role;
+            //req.userId = data.id;
             next();
         } catch (e) {
             res.send({

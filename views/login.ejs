@@ -7,35 +7,34 @@
                 <h2 class="font-weight-bold">Login </h2>
                 <span>Log in for the existing user</span>
             </div>
-            <form action="/route/login" method="POST" class="pt-3">
+            <form>
                 <div class="form-group">
                     <input id="email" type="email" class="form-control" placeholder="email" name="email">
-                    <small class="form-text text-muted text-left">Emailul trebuie sa contina @s.unibuc.ro sau
-                        @unibuc.ro</small>
+                    <small class="form-text text-muted text-left">Emailul trebuie sa contina @s.unibuc.ro sau @unibuc.ro</small>
                 </div>
                 <div class="form-group">
                     <input id="password" type="password" class="form-control" name="password" placeholder="password">
                 </div>
-                <button id="get" class="btn btn-success rounded-pill">Submit/GET</button>
-                
+                <button id="get"  class="btn btn-success rounded-pill">Submit/GET</button>
+
             </form>
             <button id="remove" onclick="rmvBtn()" class="btn btn-success rounded-pill">Remove localstorage</button>
+            <a href="/route/dashboard">Dashboard</a>
+
             <script>
 
-                
+
                 console.log("a ajuns aici")
                 const getBtn = document.getElementById("get");
-                function rmvBtn(){
-                    console.log("remove aici")
-                    window.localStorage.removeItem('token');
-                }
+                // function rmvBtn() {
+                //     console.log("remove aici")
+                //     window.localStorage.removeItem('token');
+                // }
 
-                //console.log(userEmail)
-                //console.log(userPassword.value)
-                const baseUrl = 'http://localhost:3000/route/login'
+                const baseUrl = 'http://localhost:3000/route/auth'
 
                 getBtn.addEventListener("click", getInfo)
-                
+
                 async function getInfo(e) {
                     e.preventDefault();
                     var userEmail = document.getElementById("email");
@@ -51,16 +50,24 @@
                             },
                             body: JSON.stringify(cred)
                         })
-                    console.log("a ajuns aici")
-                    console.log("aici e res: ", res.body)
-                    let asa = ""
-                    
-                    const content = await res.json();
-                    console.log("content: ", content);
+                    //console.log("a ajuns aici")
+                    //console.log("aici e res: ", res.body)
 
-                    window.localStorage.setItem('token', content.token);
-                    
+                    //const content = await res.json();
+                    //console.log("content: ", content);
+
+                    //window.localStorage.setItem('token', content.token);
+
+                    // const ftch = fetch('http://localhost:3000/route/dashboard',
+                    //     {
+                    //         method: 'GET',
+                    //         headers: {
+                    //             'Content-Type': 'application/json',
+                    //             'x-access-token': window.localStorage.getItem('token'),
+                    //         },
+                    //     })
                 }
+
             </script>
 
         </div>

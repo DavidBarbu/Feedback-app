@@ -14,14 +14,14 @@ const { localStorage } = require('node-localstorage')
 
 // login user
 
-router.post('/login', async (req, res) => {
-    const authorization = req.headers.authorization;
+router.post('/auth', async (req, res) => {
+    //const authorization = req.headers['x-access-token'];
     const body = req.body;
 
     const email = body.email;
     const password = body.password;
 
-    console.log("authorization: ", authorization)
+    //console.log("authorization: ", authorization)
     console.log("body: ", body)
     console.log("username: ", email)
     console.log("password: ", password)
@@ -42,10 +42,15 @@ router.post('/login', async (req, res) => {
                 let vrf = jwt.verify(token, SECRET_KEY)
 
                 console.log("Tokenul s-a generat si este urmatorul: ", token)
-                res.status(200).json({ token })
-
+                res
+                    .cookie("access_token", token, {
+                        httpOnly: true,
+                        secure: process.env.NODE_ENV === "production",
+                    })
+                    .status(200)
+                    .json({ message: "Logged in successfully 😊 👌" });
             } else {
-                res.send("Nu s bune")
+                res.json("Nu s bune")
             }
 
         } catch (e) {
@@ -55,25 +60,26 @@ router.post('/login', async (req, res) => {
     }
 });
 
-router.get('/auth', (req, res) => {
-    const token = req.headers.authorization
-    res.json({ "token": token })
+router.get('/login', (req, res) => {
+    res.render('login')
 })
 
 // route for dashboard
-router.get('/dashboard', (req, res) => {
+router.get('/dashboard', authorizationMiddleware, (req, res) => {
+    console.log("a ajuns la renderul de la dashboard")
     res.render('dashboard')
 })
 
 // route for logout
-router.get('/logout', (req, res) => {
-    //const token = req.headers.authorization
-    //console.log('token:', token)
-    res.render('base', { title: "Express", logout: "logout Successfully...!" })
-})
+router.get('/logout', authorizationMiddleware, (req, res) => {
+    return res
+        .clearCookie("access_token")
+        .status(200)
+        .render('login')
+});
 
 // route for questionnaire
-router.get('/chestionar', async (req, res) => {
+router.get('/chestionar', authorizationMiddleware, async (req, res) => {
     let rez = await db.Professor.findAll();
     res.send(rez)
 })
@@ -87,7 +93,7 @@ router.post('/chestionar/:id', (req, res) => {
 
 //cursuri
 router.get("/cursuri", authorizationMiddleware => {
-    res.render('base', { title: "Express", logout: "logout Successfully...!" })
+    res.render('login', { title: "Express", logout: "logout Successfully...!" })
 })
 router.get("/curs/:id", getCourseById);
 
