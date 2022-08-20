@@ -14,6 +14,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Feedback.init({
+    id_student: DataTypes.STRING,
+    id_profesor: DataTypes.STRING,
     Raspuns1: DataTypes.STRING,
     Raspuns2: DataTypes.STRING,
     Raspuns3: DataTypes.STRING,

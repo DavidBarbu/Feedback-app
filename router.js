@@ -12,7 +12,7 @@ const { SECRET_KEY } = require("./config/jwt");
 const bodyparser = require("body-parser");
 const { localStorage } = require('node-localstorage')
 var cookieParser = require('cookie-parser');
-
+//let alert = require('alert'); 
 
 // verify user
 router.post('/verify', async (req, res) => {
@@ -24,8 +24,10 @@ router.post('/verify', async (req, res) => {
     console.log("rez: ", rez.length)
     if (rez.length === 0) {
         let rez = await db.Professor.findAll({ where: { email: email, } });
+        console.log("rez: ", rez.length)
         if (rez.length === 0) {
-            res.send("Nu exista un cont cu acest email.");
+            console.log("Rezaici: ", rez.length)
+            return "Nu exista un cont cu acest email."
         } else {
             const id = rez[0].id.toString()
             const userType = rez[0].userType.toString()
@@ -121,21 +123,31 @@ router.get('/myStudentProfile', authorizationMiddleware, async (req, res) => {
 router.get('/myProfessorProfile', authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
     if (userType === "profesor") {
-        profile = await db.Student.findByPk(req.body.userId)
+        profile = await db.Professor.findByPk(req.body.userId)
         res.json(profile)
     }
     else {
         res.send("Nu sunteti profesor!");
     }
-
 })
 
-router.get('/chestionar/:id', authorizationMiddleware, (req, res) => {
-    res.render('chestionar')
+
+//professor profile
+router.get('/myProfile', authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    if (userType === "profesor") {
+        myFeedback = await db.Feedback.findAll({ where: { id_profesor: req.body.userId } })
+        res.json(myFeedback)
+    }
+    else if (userType === "student") {
+        myFeedback = await db.Feedback.findAll({ where: { id_student: req.body.userId } })
+        res.json(myFeedback)
+    }
+    else {
+        res.send("Ceva nu a functionat!");
+    }
 })
-router.post('/chestionar/:id', authorizationMiddleware, (req, res) => {
-    res.render('chestionar')
-})
+
 //cursuri
 router.get("/cursuri", authorizationMiddleware => {
     res.render('login', { title: "Express", logout: "logout Successfully...!" })
@@ -162,7 +174,7 @@ router.get("/profesori", authorizationMiddleware, async (req, res) => {
 });
 
 
-router.get("/profesor/:id", authorizationMiddleware, async (req, res) => {
+router.get("/chestionar/:id", authorizationMiddleware, async (req, res) => {
     let rez = await db.Question.findAll();
     const professorId = req.params.id;
     let userType = req.body.userType
@@ -176,24 +188,42 @@ router.get("/profesor/:id", authorizationMiddleware, async (req, res) => {
     else { res.send("smth went wrong") }
 });
 
-router.post("/profesor/:id", authorizationMiddleware, async (req, res) => {
+router.post("/chestionar/:id", authorizationMiddleware, async (req, res) => {
     const professorId = req.params.id;
     console.log("id_profesor", professorId)
     let userType = req.body.userType
     console.log("input1 ", req.body.inputu)
     if (userType === "student") {
         try {
-            await db.Feedback.update({
-                Raspuns1: req.body.inputu[0],
-                Raspuns2: req.body.inputu[1],
-                Raspuns3: req.body.inputu[2],
-            }, {
-                where:
-                {
+            let rez = await db.Feedback.findOne({
+                where: {
                     id_student: req.body.userId,
                     id_profesor: professorId
                 }
-            });
+            })
+            console.log("rezFeedback", rez)
+            if (rez) {
+                console.log("rez in if", rez)
+                await db.Feedback.update({
+                    Raspuns1: req.body.inputu[0],
+                    Raspuns2: req.body.inputu[1],
+                    Raspuns3: req.body.inputu[2],
+                }, {
+                    where:
+                    {
+                        id_student: req.body.userId,
+                        id_profesor: professorId
+                    }
+                })
+            } else {
+                await db.Feedback.create({
+                    id_student: req.body.userId,
+                    id_profesor: professorId,
+                    Raspuns1: req.body.inputu[0],
+                    Raspuns2: req.body.inputu[1],
+                    Raspuns3: req.body.inputu[2],
+                })
+            }
         } catch (error) {
             console.log('Error on updating user: ', error);
         }
@@ -204,9 +234,5 @@ router.post("/profesor/:id", authorizationMiddleware, async (req, res) => {
     }
     else { res.send("smth went wrong") }
 });
-
-router.post("/profesori", createProfessor);
-router.put("/profesor/:id", updateProfessor);
-router.delete("/profesor/:id", deleteProfessor);
 
 module.exports = router;
