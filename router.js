@@ -84,8 +84,11 @@ router.get('/login', (req, res) => {
 })
 
 // route for dashboard
-router.get('/dashboard', authorizationMiddleware, (req, res) => {
-    res.render('dashboard')
+router.get('/dashboard', authorizationMiddleware, async (req, res) => {
+    console.log("req.body.id", req.body.userId)
+    let rez = await db.Student.findByPk(req.body.userId);
+    console.log("rezzzzzzz: ", rez)
+    res.render('dashboard',{body: rez})
 })
 
 // route for logout
@@ -107,11 +110,11 @@ router.get('/myStudentProfile', authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
     if (userType === "student") {
         profile = await db.Student.findByPk(req.body.userId)
+        res.json(profile)
     }
     else {
-        res.send({ error: "Student account not found!" });
+        res.send("Nu sunteti student!");
     }
-    res.json(profile)
 })
 
 //professor profile
@@ -119,11 +122,12 @@ router.get('/myProfessorProfile', authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
     if (userType === "profesor") {
         profile = await db.Student.findByPk(req.body.userId)
+        res.json(profile)
     }
     else {
-        res.send({ error: "Professor account not found!" });
+        res.send("Nu sunteti profesor!");
     }
-    res.json(profile)
+    
 })
 
 router.get('/chestionar/:id', authorizationMiddleware, (req, res) => {
@@ -139,17 +143,39 @@ router.get("/cursuri", authorizationMiddleware => {
 router.get("/curs/:id", getCourseById);
 
 //studenti @s.unibuc.ro
-router.get("/students", getAllStudents);
+router.get("/studenti", getAllStudents);
 router.get("/student/:id", getStudentById);
-router.post("/students", createStudent);
+router.post("/studenti", createStudent);
 router.put("/student/:id", updateStudent);
 router.delete("/student/:id", deleteStudent);
 
 //profesori @unibuc.ro
-router.get("/professors", getAllProfessors);
-router.get("/professor/:id", getProfessorById);
-router.post("/professors", createProfessor);
-router.put("/professor/:id", updateProfessor);
-router.delete("/professor/:id", deleteProfessor);
+router.get("/profesori", authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    if (userType === "student") {
+        let rez = await db.Professor.findAll();
+        res.render('profesori', { body: (await rez)});
+    }
+    else {
+        res.send("<h1>Nu sunteti student!</h1>");
+    }
+});
+
+//router.get("/profesor/:id", authorizationMiddleware, getProfessorById);
+router.get("/profesor/:id", authorizationMiddleware, async (req, res) => {
+    const professorId = req.params.id;
+    let userType = req.body.userType
+    if (userType === "student") {
+            console.log(professorId)
+            const professor = await db.Professor.findByPk(professorId);
+            res.render("chestionar", {idProfessor: professor.id, firstNameProfessor: professor.firstName, lastNameProfessor: professor.lastName} );
+    } else if (userType === "profesor"){
+        res.send("<h1>Nu sunteti student!</h1>");
+    }
+    else {res.send("smth went wrong")}
+});
+router.post("/profesori", createProfessor);
+router.put("/profesor/:id", updateProfessor);
+router.delete("/profesor/:id", deleteProfessor);
 
 module.exports = router;

@@ -1,0 +1,27 @@
+<%- include('header') -%>
+
+    <div class="text-center center-div mt-5" id="login">
+        <div class="container w-25 border py-5 mt-5">
+            <h3>Alegeti un profesor:</h3>
+            <h3><%= body.firstName%></h3>
+
+            <div class="chestionar">
+                <% body.forEach(function (user) { %>
+                    <li>  
+                        <a href="profesor/<%= user.id%>"><%= user.firstName %> <%= user.lastName %>
+                    </li>                                   
+                <% }) %>
+                            
+
+
+
+            </div>
+
+
+            <!-- <a href="/route/chestionar" class="btn btn-success rounded-pill">Feedback</a> -->
+
+            <a href="/route/Logout" class="btn btn-success rounded-pill">Logout</a>
+        </div>
+    </div>
+
+    <%- include('footer') -%>

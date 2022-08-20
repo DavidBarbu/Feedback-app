@@ -49,7 +49,7 @@ module.exports.deleteStudent = (req, res) => {
 }
 
 //Professors
-module.exports.getAllProfessors =async (req, res) => {
+module.exports.getAllProfessors = async (req, res) => {
     try {
         const allProfessors = await db.Professor.findAll();
         res.send(allProfessors);
@@ -63,16 +63,22 @@ module.exports.getAllProfessors =async (req, res) => {
 
 module.exports.getProfessorById = async (req, res) => {
     const professorId = req.params.id;
-    try {
-        console.log(professorId)
-        const professor = await db.Professor.findByPk(professorId);
-        res.send(professor);
-    } catch (error) {
-        console.error(error);
-        res.send({
-            error: "Something went wrong",
-        });
+    let userType = req.body.userType
+    if (userType === "student") {
+        try {
+            console.log(professorId)
+            const professor = await db.Professor.findByPk(professorId);
+            res.send({professor});
+        } catch (error) {
+            console.error(error);
+            res.send({
+                error: "Something went wrong",
+            });
+        }
+    } else if (userType === "profesor"){
+        res.send("<h1>Nu sunteti student!</h1>");
     }
+    else {res.send("smth went wrong")}
 }
 
 module.exports.createProfessor = (req, res) => {

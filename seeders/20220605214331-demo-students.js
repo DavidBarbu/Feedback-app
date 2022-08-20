@@ -7,6 +7,7 @@ module.exports = {
     const data = [];
     for (let i = 1; i < 100; i++) {
       data.push({
+        id:i,
         email: i + "@s.unibuc.ro",
         firstName: i + "" + i,
         lastName: i - 1 + "" + (i - 1),
@@ -17,6 +18,7 @@ module.exports = {
       });
     }
     data.push({
+      id:0,
       email: "david.barbu@s.unibuc.ro",
       firstName: "Barbu",
       lastName: "David Emanuel",

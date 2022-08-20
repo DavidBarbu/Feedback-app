@@ -27,7 +27,6 @@ app.get('/', (req, res) =>{
     res.render('login', { title : "Login System"});
 })
 
-
 app.listen(port, ()=>
     {
         console.log("S-a dășchis servăru' pă", port, "dă ce mă-ntrebi?")

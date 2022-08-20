@@ -15,6 +15,7 @@ module.exports = {
      for(let i=0;i<100;i++)
      {
        data.push({
+        id:i,
          email: i+"@unibuc.ro",
          firstName: i+""+i,
          lastName: i-1+""+(i-1),
