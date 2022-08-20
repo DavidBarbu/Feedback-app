@@ -14,9 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Feedback.init({
-    Question1: DataTypes.STRING,
-    Question2: DataTypes.STRING,
-    Question3: DataTypes.STRING
+    Raspuns1: DataTypes.STRING,
+    Raspuns2: DataTypes.STRING,
+    Raspuns3: DataTypes.STRING,
+    Raspuns4: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Feedback',

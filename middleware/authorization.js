@@ -12,6 +12,7 @@ const authorizationMiddleware = (req, res, next) => {
             console.log("token decodat: ", decoded);
             req.body.userId = decoded.id
             req.body.userType = decoded.userType
+            console.log("id_student:", req.body.userId)
             console.log("userType: ", decoded.userType)
             next();
         } catch (e) {

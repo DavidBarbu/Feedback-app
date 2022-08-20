@@ -13,6 +13,7 @@ module.exports = {
         lastName: i - 1 + "" + (i - 1),
         password: "parola" + i,
         userType: "student",
+        year: Math.trunc(i%3+1),
         createdAt: new Date(),
         updatedAt: new Date(),
       });
@@ -24,6 +25,7 @@ module.exports = {
       lastName: "David Emanuel",
       password: "parolatest",
       userType: "student",
+      year: 3,
       createdAt: new Date(),
       updatedAt: new Date(),
     });

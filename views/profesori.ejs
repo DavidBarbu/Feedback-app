@@ -5,7 +5,7 @@
             <h3>Alegeti un profesor:</h3>
             <h3><%= body.firstName%></h3>
 
-            <div class="chestionar">
+            <div>
                 <% body.forEach(function (user) { %>
                     <li>  
                         <a href="profesor/<%= user.id%>"><%= user.firstName %> <%= user.lastName %>

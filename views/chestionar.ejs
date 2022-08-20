@@ -1,45 +1,31 @@
-
 <%- include('header') -%>
-
-
-<div class="text-center center-div" id="feedback">
-    <div class="container w-25 border py-5">
-        <div class="title pb-5">
+    <div class="text-center center-div" id="feedback">
+        <div class="container w-25 border py-5">
             <h2 class="font-weight-bold">Feedback</h2>
-            
+            <form action="/route/profesor/<%= idProfessor%>" method="POST" class="pt-3">
+                <div class="form-group">
+                    <h5>Acum evaluati pe <%= firstNameProfessor%>
+                            <%= lastNameProfessor%>
+                    </h5>
+                    <br>
+                    <div>
+                        <% Q.forEach(function (q) { %>
+                            <p>
+                                <%= q.intrebare%>
+                            </p>
+                            <input type="text" name="inputu" class="form-control">
+                            <br>
+                            
+                            <% }) %>
+                    </div>
+
+                </div>
+                <button type="submit" class="btn btn-success rounded-pill">Submit</button>
+            </form>
+            <br>
+            <a href="/route/Logout" class="btn btn-success rounded-pill">Logout</a>
         </div>
-        <form action="/route/chestionar/" method="POST" class="pt-3">
-            <div class="form-group">
-                <h3>Acum evaluati pe <%= firstNameProfessor%> <%= lastNameProfessor%> </h3>
-
-                <p>Cum a fost cursul?</p>
-                <input type="text" id="1" class="form-control"  onblur="getVal() ">
-                <br>
-
-                <p>Da o nota de la 1 la 10 profesorului de la curs</p>
-                <input type="text" class="form-control"  onblur="getVal()">
-                <br>
-
-                <p>Da o nota de la 1 la 10 profesorului de la seminar/laborator</p>
-                <input type="text" class="form-control"  onblur="getVal()">
-                <br>
-
-                <p>Ce ti-a placut?</p>
-                <input type="text" class="form-control"  onblur="getVal()">
-                <br>
-
-                <p>Ce nu ti-a placut?</p>
-                <input type="text" class="form-control"  onblur="getVal()">
-                <br>
-
-                <p>Aveti ceva de adaugat?</p>
-                <input type="text" class="form-control"  onblur="getVal()">
-                <br>
-            </div>
-            <button type="submit" class="btn btn-success rounded-pill">Submit</button>
-        </form>
     </div>
-</div>
 
 
-<%- include('footer') -%>
+    <%- include('footer') -%>
