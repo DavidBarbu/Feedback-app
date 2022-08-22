@@ -5,7 +5,6 @@
         <div class="container w-25 border py-5">
             <div class="title pb-5">
                 <h2 class="font-weight-bold">Login </h2>
-                <span>Log in for the existing user</span>
             </div>
             <form>
                 <div class="form-group">
@@ -16,8 +15,8 @@
                 <div class="form-group">
                     <input id="password" type="password" class="form-control" name="password" placeholder="password">
                 </div>
-                <button id="get" class="btn btn-success rounded-pill">Submit/GET</button>
-                <a href='/route/dashboard' class="btn btn-success rounded-pill">Dashboard</a>
+                <button id="get" class="btn btn-success rounded-pill">Login</button>
+                <!-- <a href='/route/dashboard' class="btn btn-success rounded-pill">Dashboard</a> -->
             </form>
             <script>
                 const getBtn = document.getElementById("get");
@@ -39,7 +38,7 @@
                             },
                             body: JSON.stringify(cred)
                         })
-                    console.log("res", res)
+                    window.location.href = 'http://localhost:3000/route/dashboard'
                 }
 
             </script>

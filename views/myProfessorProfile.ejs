@@ -1,0 +1,13 @@
+<%- include('header') -%>
+<div class="text-center center-div mt-5">
+        <h3>Nume: <%= profile.firstName%></h3>
+        <h3>Prenume: <%= profile.lastName%></h3>
+        <h3>Email: <%= profile.email%></h3>
+        <h3>Tip cont: <%= profile.userType%></h3>
+        <a href="/route/dashboard" class="btn btn-success rounded-pill">Inapoi</a>
+        <br>
+        <br>
+        <a href="/route/logout" class="btn btn-success rounded-pill">Logout</a>
+</div>
+
+<%- include('footer') -%>

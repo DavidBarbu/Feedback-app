@@ -1,0 +1,39 @@
+<%- include('header') -%>
+    <div class="text-center center-div" id="feedback">
+        <div class="container w-25 border py-5">
+            <h2 class="font-weight-bold">All Feedbacks</h2>
+            <div class="form-group">
+                <br>
+                <div name="feedback">
+                    <% allFeedbacks.forEach(function (f) {%>
+                        <p>
+                            Evaluarea profesorului <%=f.id_profesor%>
+                                de catre studentul <%=f.id_student%>
+                        </p>
+                        <p>
+                            <%= f.Raspuns1%>
+                        </p>
+                        <p>
+                            <%= f.Raspuns2%>
+                        </p>
+                        <p>
+                            <%= f.Raspuns3%>
+                        </p>
+                        <p>
+                            <%= f.Raspuns4%>
+
+                                <br>
+                        </p>
+                        <br>
+                        <br>
+                        <% }) %>
+                </div>
+            </div>
+            </form>
+            <br>
+            <a href="/route/logout" class="btn btn-success rounded-pill">Logout</a>
+        </div>
+    </div>
+
+
+    <%- include('footer') -%>

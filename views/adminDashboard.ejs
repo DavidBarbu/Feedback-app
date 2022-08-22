@@ -1,0 +1,16 @@
+<%- include('header') -%>
+<script>
+    sessionStorage.clear();
+</script>
+<div class="text-center center-div mt-5" id="login">
+    <div class="container w-25 border py-5 mt-5">
+        <h3>V-ati logat cu succes in cont</h3>
+        <h3><%= body.email%></h3>
+        <a href="/route/feedbacks" class="btn btn-success rounded-pill">Toate evaluarile</a> 
+        <br>
+        <br>
+        <a href="/route/logout" class="btn btn-success rounded-pill">Logout</a>
+    </div>
+</div>
+
+<%- include('footer') -%>

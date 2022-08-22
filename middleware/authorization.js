@@ -20,7 +20,7 @@ const authorizationMiddleware = (req, res, next) => {
                 error: "invalid token!"
             });
         }
-    }else{res.send("<h1>Nu aveti acces la aceasta pagina!</h1>");}
+    }else{res.render('login', { txt:"Date invalide!"})}
     
 }
 
