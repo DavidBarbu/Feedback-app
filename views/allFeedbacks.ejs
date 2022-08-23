@@ -1,4 +1,4 @@
-    <%- include('header') -%>
+<%- include('header') -%>
 
     <style>
         table {
@@ -21,40 +21,52 @@
     <div class="text-center center-div" id="feedback">
         <div class="container w-40 border py-5">
             <h2 class="font-weight-bold">All Feedbacks</h2>
-            <div >
+            <div>
                 <br>
-                <div name="feedback"> <table>
+                <div name="feedback">
+                    <table>
+                        <th>
+                            Profesor evaluat
+                        </th>
+                        <th>
+                            Student evaluator
+                        </th>
+                        <% allQuestions.forEach(function (chiu) {%>
+                            <th>
+                                <%=chiu.intrebare%>
+                            </th>
+                            <%})%>
+                                <br>
+                                <%for (var i=0; i < allFeedbacks.length; i++) { %>
+                                    <%let id_prof=allFeedbacks[i]['dataValues']['id_profesor'] %>
+                                        <%let id_stud=allFeedbacks[i]['dataValues']['id_student'] %>
+                                            <tr>
+                                                <td>
+                                                    <%=allProfessors[id_prof]['dataValues']['firstName']%>
+                                                        <%allProfessors[id_prof]['dataValues']['lastName']%>
+                                                </td>
+                                                <td>
+                                                    <%=allStudents[id_stud]['dataValues']['firstName']%>
+                                                        <%allStudents[id_stud]['dataValues']['lastName']%>
+                                                </td>
+                                                <% for (var j=1; j<=Object.keys(allFeedbacks[i]['dataValues']).length-5;
+                                                    j++) { %>
 
-                    <% allQuestions.forEach(function (chiu) {%>
-                        <p><th>
-                            <%=chiu.intrebare%>
-                        </th></p>
-                        <%})%>
+                                                    <p>
+                                                        <td>
+                                                            <%= allFeedbacks[i]['dataValues']["Raspuns".concat(j)] %>
+                                                        </td>
+                                                    </p>
 
-
-                            <br>
-                           
-                                
-                                <%for (var i=0; i < allFeedbacks.length; i++) {console.log(i) %>
-                                    <tr>
-                                        <% console.log("FB:", Object.keys(allFeedbacks[i]['dataValues']).length-3) %>
-                                            <% for (var j=1; j <=Object.keys(allFeedbacks[i]['dataValues']).length-5; j++)
-                                                {console.log("intrebare", allFeedbacks[i]['dataValues']["Raspuns".concat(j)]) %>
-
-                                                <p>
-                                                    <td>
-                                                        <%= allFeedbacks[i]['dataValues']["Raspuns".concat(j)] %>
-                                                    </td>
-                                                </p>
-
-                                                <% }%>
-                                    </tr>
-                                    <%}%>
-                            </table>
+                                                    <% }%>
+                                            </tr>
+                                            <%}%>
+                    </table>
                 </div>
             </div>
-            </form>
-            <br>
+            </form><br>
+            <a href="/route/dashboard" class="btn btn-success rounded-pill">Inapoi</a>
+            <br><br>
             <a href="/route/logout" class="btn btn-success rounded-pill">Logout</a>
         </div>
     </div>

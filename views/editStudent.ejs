@@ -1,0 +1,19 @@
+<%- include('header') -%>
+
+    <div class="text-center center-div mt-5" id="login">
+        <div class="container w-25 border py-5 mt-5">
+            <h3>Editati studentul:</h3>
+            <h3><%= body.firstName%> <%= body.lastName%></h3>
+
+            <div>
+                
+                <% for(var i = 0; i < Object.keys(body['dataValues']).length; i++)%><p><%= console.log(body['dataValues']['id']) %></p>
+            </div>
+
+            <a href="/route/deleteStudent/<%= body.id%>" class="btn btn-success rounded-pill">Sterge student</a>
+            <a href="/route/db" class="btn btn-success rounded-pill">Inapoi</a>
+            <a href="/route/Logout" class="btn btn-success rounded-pill">Logout</a>
+        </div>
+    </div>
+
+    <%- include('footer') -%>

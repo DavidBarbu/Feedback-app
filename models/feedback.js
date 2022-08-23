@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const getNumberOfQuestions = require('../controllers/users');
 module.exports = (sequelize, DataTypes) => {
   class Feedback extends Model {
     /**
@@ -13,14 +14,14 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   };
-  Feedback.init({
+  let updateObject = {
     id_student: DataTypes.STRING,
     id_profesor: DataTypes.STRING,
-    Raspuns1: DataTypes.STRING,
-    Raspuns2: DataTypes.STRING,
-    Raspuns3: DataTypes.STRING,
-    Raspuns4: DataTypes.STRING,
-  }, {
+  }
+  for (let i = 0; i < 6; i++) {
+    updateObject["Raspuns" + (i + 1)] = DataTypes.STRING;
+  }
+  Feedback.init(updateObject, {
     sequelize,
     modelName: 'Feedback',
   });

@@ -12,8 +12,6 @@ const { SECRET_KEY } = require("./config/jwt");
 const bodyparser = require("body-parser");
 const { localStorage } = require('node-localstorage')
 var cookieParser = require('cookie-parser');
-//const { QueryInterface } = require("sequelize/types");
-//let alert = require('alert'); 
 
 // verify user
 router.post('/verify', async (req, res) => {
@@ -75,15 +73,16 @@ router.post('/verify', async (req, res) => {
 // route for dashboard
 router.get('/dashboard', authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
-    let rez = await db.Student.findByPk(req.body.userId);
-    //console.log("req.body.id", req.body.userId)
-    //const professor = await db.Professor.findByPk(professorId);
+    let student = await db.Student.findByPk(req.body.userId);
+    const professor = await db.Professor.findByPk(req.body.userId);
     if (userType === "student") {
-        res.render("studentDashboard", { body: rez })
+        res.render("studentDashboard", { body: student })
     } else if (userType === "profesor") {
-        res.render("professorDashboard", { body: rez })
+        res.render("professorDashboard", { body: professor })
     } else if (userType === "admin") {
-        res.render("adminDashboard", { body: rez })
+        res.render("adminDashboard", { body: student })
+    } else if (userType === "conducere") {
+        res.render("conducereDashboard", { body: student })
     } else { res.send("smth went wrong") }
 })
 
@@ -93,8 +92,12 @@ router.get('/db', authorizationMiddleware, async (req, res) => {
     let students = await db.Student.findAll()
     let professors = await db.Professor.findAll()
     if (userType === "admin") {
-        res.render("db", { students: students, professors: professors })
-    } else { res.send("Nu sunteti admin!") }
+        res.render("db_view", { students: students, professors: professors })
+    } else if (userType === "conducere") {
+        res.render("db_edit", { students: students, professors: professors })
+    } else {
+        res.send("Nu sunteti admin!")
+    }
 })
 
 // route for logout
@@ -137,13 +140,11 @@ router.get('/myProfessorProfile', authorizationMiddleware, async (req, res) => {
 
 router.get('/allFeedbacks', authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
-    if (userType === "admin") {
+    if (userType === "admin" || userType === "conducere") {
         allFeedbacks = await db.Feedback.findAll()
         allStudents = await db.Student.findAll()
-        allProfessors = await db.Student.findAll()
+        allProfessors = await db.Professor.findAll()
         allQuestions = await db.Question.findAll()
-        console.log("a ajuns aici", allFeedbacks)
-        //res.json(allFeedbacks)
         res.render('allFeedbacks', { allFeedbacks, allStudents, allProfessors, allQuestions })
     }
     else {
@@ -189,6 +190,51 @@ router.get("/profesori", authorizationMiddleware, async (req, res) => {
     }
 });
 
+router.get("/editStudent/:id", authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    const studentId = req.params.id;
+    if (userType === "conducere") {
+        const student = await db.Student.findByPk(studentId)
+        res.render('editStudent', { body: (await student) });
+    } else res.send("<h1>Nu aveti acces!!</h1>");
+
+})
+
+router.get("/deleteStudent/:id", authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    const studentId = req.params.id;
+    if (userType === "conducere") {
+        const student = await db.Student.destroy({ where: { id: studentId } })
+        const students = await db.Student.findAll()
+        const professors = await db.Professor.findAll()
+        res.render("db_edit", { students: students, professors: professors })
+    } else res.send("<h1>Nu aveti acces!!</h1>");
+
+})
+router.get("/editProfessor/:id", authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    const professorId = req.params.id;
+    if (userType === "conducere") {
+        const profesor = await db.Professor.findByPk(professorId)
+        res.render('editProfessor', { body: (await profesor) });
+    } else res.send("<h1>Nu aveti acces!!</h1>");
+
+})
+
+
+
+router.get("/deleteProfessor/:id", authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    const professorId = req.params.id;
+    if (userType === "conducere") {
+        const student = await db.Professor.destroy({ where: { id: professorId } })
+        const students = await db.Student.findAll()
+        const professors = await db.Professor.findAll()
+        res.render("db_edit", { students: students, professors: professors })
+    } else res.send("<h1>Nu aveti acces!!</h1>");
+
+})
+
 
 router.get("/chestionar/:id", authorizationMiddleware, async (req, res) => {
     let rez = await db.Question.findAll();
@@ -204,10 +250,49 @@ router.get("/chestionar/:id", authorizationMiddleware, async (req, res) => {
     else { res.send("smth went wrong") }
 });
 
+router.get("/questions", authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    if (userType === "conducere") {
+        const questions = await db.Question.findAll()
+        res.render('questions', { questions: questions });
+    } else res.send("<h1>Nu aveti acces!!</h1>");
+})
+
+router.post("/delete_question", authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    if (userType === "conducere") {
+        try {
+            const qs = req.body.qs
+            for (var i = 0; i < qs.length; i++) {
+                const question = await db.Question.destroy({ where: { id: qs[i] } })
+            }
+        } catch (error) {
+            console.log('Error on updating user: ', error);
+        }
+
+    } else res.send("<h1>Nu aveti acces!!</h1>");
+})
+
+router.post("/questions", authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    if (userType === "conducere") {
+        try {
+            await db.Question.create({ intrebare: req.body.inputu })
+            console.log("INPUTU:", req.body.inputu)
+
+        } catch (error) {
+            console.log('Error on updating user: ', error);
+        }
+        const questions = await db.Question.findAll()
+        res.send({ questions })
+    } else res.send("<h1>Nu aveti acces!!</h1>");
+})
+
 router.post("/chestionar/:id", authorizationMiddleware, async (req, res) => {
     const professorId = req.params.id;
     let userType = req.body.userType
-    console.log("req.body", req.body.inputu.length)
+    const DB = await db.Question.findAll()
+    console.log("DB: ", DB.length)
     if (userType === "student") {
         try {
             let rez = await db.Feedback.findOne({
@@ -216,12 +301,11 @@ router.post("/chestionar/:id", authorizationMiddleware, async (req, res) => {
                     id_profesor: professorId
                 }
             })
-            console.log("rezFeedback", rez)
+            let updateObject = {}
+            for (let i = 0; i < req.body.inputu.length; i++) {
+                updateObject["Raspuns" + (i + 1)] = req.body.inputu[i];
+            }
             if (rez) {
-                let updateObject = {}
-                for (let i = 0; i < req.body.inputu.length; i++) {
-                    updateObject["Raspuns" + (i + 1)] = req.body.inputu[i];
-                }
                 await db.Feedback.update(
                     updateObject,
                     {
@@ -231,14 +315,14 @@ router.post("/chestionar/:id", authorizationMiddleware, async (req, res) => {
                             id_profesor: professorId
                         }
                     })
-
             } else {
+                updateObject["id_student"] = req.body.userId
+                updateObject["id_profesor"] = professorId
                 await db.Feedback.create(updateObject)
             }
         } catch (error) {
             console.log('Error on updating user: ', error);
         }
-        // res.render("chestionar", {idProfessor: professor.id, firstNameProfessor: professor.firstName, lastNameProfessor: professor.lastName} );
         res.send("Successfully")
     } else if (userType === "profesor") {
         res.send("<h1>Nu sunteti student!</h1>");

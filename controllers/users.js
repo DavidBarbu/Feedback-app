@@ -9,6 +9,10 @@ module.exports.getCourseById = (req, res) => {
     res.render('dashboard', { title: "Login System" });
 }
 
+exports.getNumberOfQuestions = getNumberOfQuestions =async (req, res) => {
+    return 5
+}
+
 //students
 module.exports.getAllStudents = async (req, res) => {
     try {

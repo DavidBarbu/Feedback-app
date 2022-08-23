@@ -5,7 +5,7 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
 
     const data = [];
-    for (let i = 1; i < 100; i++) {
+    for (let i = 4; i < 100; i++) {
       data.push({
         id:i,
         email: i + "@s.unibuc.ro",
@@ -19,13 +19,33 @@ module.exports = {
       });
     }
     data.push({
-      id:0,
+      id:1,
       email: "david.barbu@s.unibuc.ro",
       firstName: "Barbu",
       lastName: "David Emanuel",
       password: "parolatest",
       userType: "student",
       year: 3,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+    data.push({
+      id:2,
+      email: "conducere@conducere",
+      firstName: "Conducerescu",
+      lastName: "Conducere",
+      password: "conducere",
+      userType: "conducere",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+    data.push({
+      id:3,
+      email: "admin@admin",
+      firstName: "Adminescu",
+      lastName: "Admin",
+      password: "admin",
+      userType: "admin",
       createdAt: new Date(),
       updatedAt: new Date(),
     });

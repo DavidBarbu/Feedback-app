@@ -1,0 +1,78 @@
+<%- include('header') -%>
+    <script>
+        function removeCheckedCheckboxes() {
+            console.log("================================")
+            var checked = document.querySelectorAll(".delete-checkbox:checked");
+            const forDel = {}
+            checked.forEach((elem) => {
+                forDel[elem.id] = elem.id
+                console.log("ID: ", elem.id)
+            })
+            console.log(forDel)
+            return forDel
+        }
+    </script>
+    <div class="text-center center-div" id="feedback">
+        <div class="container w-25 border py-5">
+            <form action="/route/questions" method="POST" class="pt-3">
+                <div class="form-group">
+                    <h3>Acum editati intrebarile!</h3>
+                    <br>
+                    <div>
+                        <p>
+                            Adaugati intrebare noua:
+                        </p>
+                        <input type="text" name="inputu" class="form-control">
+                        <br>
+                    </div>
+
+                </div>
+                <button type="submit" class="btn btn-success rounded-pill">Adauga intrebarea</button>
+            </form>
+            <div>
+                <br>
+
+
+                <div id="product-space">
+                    <% questions.forEach(function(q) { %>
+                        <div class="product">
+                            <p> <input id="<%=q['dataValues']['id']%>" type="checkbox" class="delete-checkbox">
+                                <%=q['dataValues']['intrebare']%>
+                            </p>
+                        </div>
+                        <%})%>
+                </div>
+
+                <button id="get" class="btn btn-success rounded-pill">Sterge intrebarea</button>
+            </div>
+            <br>
+            <a href="/route/logout" class="btn btn-success rounded-pill">Logout</a>
+        </div>
+    </div>
+    <script>
+        const getBtn = document.getElementById("get");
+        const baseUrl = 'http://localhost:3000/route/delete_question'
+        getBtn.addEventListener("click", getInfo)
+
+        async function getInfo(e) {
+            e.preventDefault();
+            var checked = document.querySelectorAll(".delete-checkbox:checked");
+            const forDel = []
+            checked.forEach((elem) => {
+                forDel.push(elem.id)
+            })
+            const cred = { qs: forDel }
+
+            const res = await fetch(baseUrl,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(cred)
+                })
+            
+        }
+
+    </script>
+    <%- include('footer') -%>
