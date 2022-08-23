@@ -12,6 +12,7 @@ const { SECRET_KEY } = require("./config/jwt");
 const bodyparser = require("body-parser");
 const { localStorage } = require('node-localstorage')
 var cookieParser = require('cookie-parser');
+//const { QueryInterface } = require("sequelize/types");
 //let alert = require('alert'); 
 
 // verify user
@@ -78,8 +79,6 @@ router.get('/dashboard', authorizationMiddleware, async (req, res) => {
     //console.log("req.body.id", req.body.userId)
     //const professor = await db.Professor.findByPk(professorId);
     if (userType === "student") {
-        //console.log("aci:", rez[0].intrebare)
-
         res.render("studentDashboard", { body: rez })
     } else if (userType === "profesor") {
         res.render("professorDashboard", { body: rez })
@@ -88,8 +87,19 @@ router.get('/dashboard', authorizationMiddleware, async (req, res) => {
     } else { res.send("smth went wrong") }
 })
 
+// route for admin to edit
+router.get('/db', authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    let students = await db.Student.findAll()
+    let professors = await db.Professor.findAll()
+    if (userType === "admin") {
+        res.render("db", { students: students, professors: professors })
+    } else { res.send("Nu sunteti admin!") }
+})
+
 // route for logout
 router.get('/logout', (req, res) => {
+    //queryInterface.removeColumn('Questions','da')
     return res
         .clearCookie("access_token")
         .status(200)
@@ -125,15 +135,16 @@ router.get('/myProfessorProfile', authorizationMiddleware, async (req, res) => {
     }
 })
 
-router.get('/feedbacks', authorizationMiddleware, async (req, res) => {
+router.get('/allFeedbacks', authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
     if (userType === "admin") {
         allFeedbacks = await db.Feedback.findAll()
         allStudents = await db.Student.findAll()
         allProfessors = await db.Student.findAll()
+        allQuestions = await db.Question.findAll()
         console.log("a ajuns aici", allFeedbacks)
         //res.json(allFeedbacks)
-        res.render('allFeedbacks', { allFeedbacks, allStudents, allProfessors })
+        res.render('allFeedbacks', { allFeedbacks, allStudents, allProfessors, allQuestions })
     }
     else {
         res.send("Nu sunteti admin!");
@@ -141,12 +152,12 @@ router.get('/feedbacks', authorizationMiddleware, async (req, res) => {
 })
 
 //professor profile
-router.get('/myProfile', authorizationMiddleware, async (req, res) => {
+router.get('/professorFeedbacks', authorizationMiddleware, async (req, res) => {
     let q = await db.Question.findAll();
     let userType = req.body.userType
     if (userType === "profesor") {
         myFeedback = await db.Feedback.findAll({ where: { id_profesor: req.body.userId } })
-        res.render('feedbacks', { fb: myFeedback, Q: q })
+        res.render('professorFeedbacks', { fb: myFeedback, Q: q })
     }
     else {
         res.send("Nu sunteti profesor!");

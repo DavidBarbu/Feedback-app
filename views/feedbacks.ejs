@@ -12,16 +12,16 @@
                         </p>
                         <%})%>
                             <br>
-                            <br>
-                            <%for (var i=0; i < fb.length; i++) {console.log(i) %>
-                                <% console.log("FB:", Object.keys(fb[i]['dataValues']).length-3) %>
-                                    <% for (var j=1; j <=Object.keys(fb[i]['dataValues']).length-5; j++)
-                                        {console.log("intrebare", fb[i]['dataValues']["Raspuns".concat(j)]) %>
-                                        <p>
-                                            <%= fb[i]['dataValues']["Raspuns".concat(j)] %>
-                                        </p>
-                                        <% }%><br>
-                                            <%}%>
+                                <br>
+                                <%for (var i=0; i < fb.length; i++) {console.log(i) %>
+                                    <% console.log("FB:", Object.keys(fb[i]['dataValues']).length-3) %>
+                                        <% for (var j=1; j <=Object.keys(fb[i]['dataValues']).length-5; j++)
+                                            {console.log("intrebare", fb[i]['dataValues']["Raspuns".concat(j)]) %>
+                                            <p>
+                                                <%= fb[i]['dataValues']["Raspuns".concat(j)] %>
+                                            </p>
+                                            <% }%><br>
+                                                <%}%>
                 </div>
             </div>
             </form>

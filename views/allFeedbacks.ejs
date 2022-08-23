@@ -1,32 +1,56 @@
-<%- include('header') -%>
-    <div class="text-center center-div" id="feedback">
-        <div class="container w-25 border py-5">
-            <h2 class="font-weight-bold">All Feedbacks</h2>
-            <div class="form-group">
-                <br>
-                <div name="feedback">
-                    <% allFeedbacks.forEach(function (f) {%>
-                        <p>
-                            Evaluarea profesorului <%=f.id_profesor%>
-                                de catre studentul <%=f.id_student%>
-                        </p>
-                        <p>
-                            <%= f.Raspuns1%>
-                        </p>
-                        <p>
-                            <%= f.Raspuns2%>
-                        </p>
-                        <p>
-                            <%= f.Raspuns3%>
-                        </p>
-                        <p>
-                            <%= f.Raspuns4%>
+    <%- include('header') -%>
 
-                                <br>
-                        </p>
-                        <br>
-                        <br>
-                        <% }) %>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #ffffff75;
+        }
+    </style>
+    <div class="text-center center-div" id="feedback">
+        <div class="container w-40 border py-5">
+            <h2 class="font-weight-bold">All Feedbacks</h2>
+            <div >
+                <br>
+                <div name="feedback"> <table>
+
+                    <% allQuestions.forEach(function (chiu) {%>
+                        <p><th>
+                            <%=chiu.intrebare%>
+                        </th></p>
+                        <%})%>
+
+
+                            <br>
+                           
+                                
+                                <%for (var i=0; i < allFeedbacks.length; i++) {console.log(i) %>
+                                    <tr>
+                                        <% console.log("FB:", Object.keys(allFeedbacks[i]['dataValues']).length-3) %>
+                                            <% for (var j=1; j <=Object.keys(allFeedbacks[i]['dataValues']).length-5; j++)
+                                                {console.log("intrebare", allFeedbacks[i]['dataValues']["Raspuns".concat(j)]) %>
+
+                                                <p>
+                                                    <td>
+                                                        <%= allFeedbacks[i]['dataValues']["Raspuns".concat(j)] %>
+                                                    </td>
+                                                </p>
+
+                                                <% }%>
+                                    </tr>
+                                    <%}%>
+                            </table>
                 </div>
             </div>
             </form>

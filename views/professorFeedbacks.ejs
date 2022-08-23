@@ -1,0 +1,63 @@
+<%- include('header') -%>
+
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td,
+    th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #ffffff75;
+    }
+</style>
+<div class="text-center center-div" id="feedback">
+    <div class="container w-40 border py-5">
+        <h2 class="font-weight-bold">My Feedbacks</h2>
+        <div >
+            <br>
+            <div name="feedback"> <table>
+
+                <% Q.forEach(function (chiu) {%>
+                    <p><th>
+                        <%=chiu.intrebare%>
+                    </th></p>
+                    <%})%>
+
+
+                        <br>
+                       
+                            
+                            <%for (var i=0; i < fb.length; i++) {console.log(i) %>
+                                <tr>
+                                    <% console.log("FB:", Object.keys(fb[i]['dataValues']).length-3) %>
+                                        <% for (var j=1; j <=Object.keys(fb[i]['dataValues']).length-5; j++)
+                                            {console.log("intrebare", fb[i]['dataValues']["Raspuns".concat(j)]) %>
+
+                                            <p>
+                                                <td>
+                                                    <%= fb[i]['dataValues']["Raspuns".concat(j)] %>
+                                                </td>
+                                            </p>
+
+                                            <% }%>
+                                </tr>
+                                <%}%>
+                        </table>
+            </div>
+        </div>
+        </form>
+        <br>
+        <a href="/route/logout" class="btn btn-success rounded-pill">Logout</a>
+    </div>
+</div>
+
+
+<%- include('footer') -%>
