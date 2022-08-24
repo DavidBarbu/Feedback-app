@@ -53,7 +53,8 @@
                         <th>ID</th>
                         <th>STUDENT</th>
                         <th>EMAIL</th>
-                        <th>YEAR</th>
+                        <th>GRUPA</th>
+                        <th>AN</th>
                     </tr>
                     <% students.forEach(function (q) { %>
                         <tr>
@@ -66,6 +67,9 @@
                             </td>
                             <td>
                                 <%=q.email%>
+                            </td>
+                            <td>
+                                <%=q.class%>
                             </td>
                             <td>
                                 <%=q.year%>

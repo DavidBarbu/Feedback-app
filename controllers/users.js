@@ -9,9 +9,6 @@ module.exports.getCourseById = (req, res) => {
     res.render('dashboard', { title: "Login System" });
 }
 
-exports.getNumberOfQuestions = getNumberOfQuestions =async (req, res) => {
-    return 5
-}
 
 //students
 module.exports.getAllStudents = async (req, res) => {
@@ -72,17 +69,17 @@ module.exports.getProfessorById = async (req, res) => {
         try {
             console.log(professorId)
             const professor = await db.Professor.findByPk(professorId);
-            res.send({professor});
+            res.send({ professor });
         } catch (error) {
             console.error(error);
             res.send({
                 error: "Something went wrong",
             });
         }
-    } else if (userType === "profesor"){
+    } else if (userType === "profesor") {
         res.send("<h1>Nu sunteti student!</h1>");
     }
-    else {res.send("smth went wrong")}
+    else { res.send("smth went wrong") }
 }
 
 module.exports.createProfessor = (req, res) => {

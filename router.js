@@ -22,7 +22,28 @@ router.post('/verify', async (req, res) => {
     if (rez.length === 0) {
         let rez = await db.Professor.findAll({ where: { email: email, } });
         if (rez.length === 0) {
-            res.send("Nu exista un cont cu acest email.")
+            let rez = await db.Admin.findAll({ where: { email: email, } });
+            if (rez.length === 0) {
+                res.send("Nu exista un cont cu acest email.")
+            }
+            const id = rez[0].id.toString()
+            const userType = rez[0].userType.toString()
+            try {
+                if (email.toString() === rez[0].email.toString() && password.toString() === rez[0].password.toString()) {
+                    const token = jwt.sign({ id, userType }, SECRET_KEY);
+                    res
+                        .cookie("access_token", token, {
+                            httpOnly: true,
+                            secure: process.env.NODE_ENV === "production",
+                        })
+                        .status(200)
+                        .json({ message: "Logged in successfully 😊 👌" });
+                } else {
+                    res.json("Nu s bune")
+                }
+            } catch (e) {
+                console.error(e)
+            }
         } else {
             const id = rez[0].id.toString()
             const userType = rez[0].userType.toString()

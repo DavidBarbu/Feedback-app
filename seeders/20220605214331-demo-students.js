@@ -5,7 +5,7 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
 
     const data = [];
-    for (let i = 4; i < 100; i++) {
+    for (let i = 2; i < 100; i++) {
       data.push({
         id:i,
         email: i + "@s.unibuc.ro",
@@ -13,6 +13,7 @@ module.exports = {
         lastName: i - 1 + "" + (i - 1),
         password: "parola" + i,
         userType: "student",
+        class: Math.trunc(i%3+1)*100+((i*i*i+15)%3+1)*10+((i*i+27)%3+1),
         year: Math.trunc(i%3+1),
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -25,51 +26,17 @@ module.exports = {
       lastName: "David Emanuel",
       password: "parolatest",
       userType: "student",
+      class: 312,
       year: 3,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-    data.push({
-      id:2,
-      email: "conducere@conducere",
-      firstName: "Conducerescu",
-      lastName: "Conducere",
-      password: "conducere",
-      userType: "conducere",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-    data.push({
-      id:3,
-      email: "admin@admin",
-      firstName: "Adminescu",
-      lastName: "Admin",
-      password: "admin",
-      userType: "admin",
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
     await queryInterface.bulkInsert('Students', data, {});
-
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
   },
 
   down: async (queryInterface, Sequelize) => {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
+    
     await queryInterface.bulkDelete("Students", null, {});
   }
 };
