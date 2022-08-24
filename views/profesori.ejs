@@ -3,23 +3,21 @@
     <div class="text-center center-div mt-5" id="login">
         <div class="container w-25 border py-5 mt-5">
             <h3>Alegeti un profesor:</h3>
-            <h3><%= body.firstName%></h3>
+            <h3>
+                <%= profesori[0]['dataValues'].firstName%>
+            </h3>
 
             <div>
-                <% body.forEach(function (user) { %>
-                    <li>  
-                        <a href="chestionar/<%= user.id%>"><%= user.firstName %> <%= user.lastName %>
-                    </li>                                   
-                <% }) %>
-                            
+                <%for(var i=0;i< profi.length;i++){ %>
 
-
-
+                    <li>
+                        <%console.log("aicisa debug:", profesori[profi[i]])%>
+                            <a href="/route/chestionar/<%= profesori[profi[i]]['dataValues'].id%>">
+                                <%=profesori[profi[i]]['dataValues']['firstName']%>
+                                    <%=profesori[profi[i]]['dataValues']['lastName']%>
+                    </li>
+                    <%}%>
             </div>
-
-
-            <!-- <a href="/route/chestionar" class="btn btn-success rounded-pill">Feedback</a> -->
-
             <a href="/route/dashboard" class="btn btn-success rounded-pill">Inapoi</a>
             <a href="/route/Logout" class="btn btn-success rounded-pill">Logout</a>
         </div>

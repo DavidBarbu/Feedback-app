@@ -1,0 +1,24 @@
+<%- include('header') -%>
+
+    <div class="text-center center-div mt-5" id="login">
+        <div class="container w-25 border py-5 mt-5">
+            <h3>Pentru anul dumneavoastra de studiu (anul <%=student.year%>, grupa <%=student.class%>) aveti urmatoarele
+                        optiuni:</h3>
+
+            <div>
+                <% materii.forEach(function (materie) { %>
+                    <p>
+                        <% if(materie.grupa==student.class) {%>
+                            <%=materie.grupa%>
+                        <a href="/route/profesori/<%= materie.grupa%>/<%= materie.nume_materie%>">
+                                <%= materie.nume_materie %></a>
+                                <% }%>
+                    </p>
+                    <% }) %>
+            </div>
+            <a href="/route/dashboard" class="btn btn-success rounded-pill">Inapoi</a>
+            <a href="/route/Logout" class="btn btn-success rounded-pill">Logout</a>
+        </div>
+    </div>
+
+    <%- include('footer') -%>

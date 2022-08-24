@@ -2,15 +2,13 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
+    function getRandomItem(arr) {
+      const randomIndex = Math.floor(Math.random() * arr.length);
+      const item = arr[randomIndex];
+
+      return item;
+    }
+    const materii = ['Algebra', 'Geometrie', 'Analiza', 'Statistica','Geometrie 2','Algebra Liniara', 'Geometrie in spatiu', 'Analiza Numerica', 'Probabilitati','Unity']
      const data = [];
      for(let i=0;i<100;i++)
      {
@@ -21,6 +19,7 @@ module.exports = {
          lastName: i-1+""+(i-1),
          password: i+"parola",
          userType: "profesor",
+         materie_predata: getRandomItem(materii),
          createdAt: new Date(),
          updatedAt: new Date(),
        });

@@ -204,11 +204,34 @@ router.put("/student/:id", updateStudent);
 router.delete("/student/:id", deleteStudent);
 
 //profesori @unibuc.ro
-router.get("/profesori", authorizationMiddleware, async (req, res) => {
+router.get("/profesori/:id/:materie", authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    let grupa = req.params.id
+    let materie = req.params.materie
+    if (userType === "student") {
+         let profi = []
+        let profesori = await db.Professor.findAll()
+        for (let i = 0; i < profesori.length; i++) {
+            //console.log(profesori[i]['dataValues']['materie_predata'], materie )
+            if (profesori[i]['dataValues']['materie_predata']==materie){
+                console.log("aici unul:", profesori[i]['dataValues']['materie_predata'])
+                profi.push(profesori[i]['dataValues']['id'])
+            }
+        }
+        res.render('profesori', { profi: profi, profesori: profesori});
+    }
+    else {
+        res.send("<h1>Nu sunteti student!</h1>");
+    }
+});
+
+//materii 
+router.get("/materii", authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
     if (userType === "student") {
-        let rez = await db.Professor.findAll();
-        res.render('profesori', { body: (await rez) });
+        let materii = await db.Subject.findAll();
+        let student = await db.Student.findByPk(req.body.userId)
+        res.render('materii', { materii: materii, student: student });
     }
     else {
         res.send("<h1>Nu sunteti student!</h1>");
@@ -338,7 +361,7 @@ router.post("/chestionar/:id", authorizationMiddleware, async (req, res) => {
                     console.log("rez: ", rez)
                     await db.Feedback.update(
                         {
-                            raspuns : req.body.inputu[i],
+                            raspuns: req.body.inputu[i],
                         },
                         {
                             where:
@@ -360,7 +383,9 @@ router.post("/chestionar/:id", authorizationMiddleware, async (req, res) => {
         } catch (error) {
             console.log('Error on updating user: ', error);
         }
-        res.send("Successfully")
+        let materii = await db.Subject.findAll();
+        let student = await db.Student.findByPk(req.body.userId)
+        res.render('materii', { materii: materii, student: student });
     } else if (userType === "profesor") {
         res.send("<h1>Nu sunteti student!</h1>");
     }
