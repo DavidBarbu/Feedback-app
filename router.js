@@ -19,16 +19,20 @@ router.post('/verify', async (req, res) => {
     const email = body.email;
     const password = body.password;
     let rez = await db.Student.findAll({ where: { email: email, } });
+    console.log(rez)
     if (rez.length === 0) {
         let rez = await db.Professor.findAll({ where: { email: email, } });
+        console.log(rez)
         if (rez.length === 0) {
             let rez = await db.Admin.findAll({ where: { email: email, } });
+            console.log(rez)
             if (rez.length === 0) {
                 res.send("Nu exista un cont cu acest email.")
             }
-            const id = rez[0].id.toString()
-            const userType = rez[0].userType.toString()
+            console.log(rez)
             try {
+                const id = rez[0].id.toString()
+                const userType = rez[0].userType.toString()
                 if (email.toString() === rez[0].email.toString() && password.toString() === rez[0].password.toString()) {
                     const token = jwt.sign({ id, userType }, SECRET_KEY);
                     res
@@ -316,30 +320,42 @@ router.post("/chestionar/:id", authorizationMiddleware, async (req, res) => {
     console.log("DB: ", DB.length)
     if (userType === "student") {
         try {
-            let rez = await db.Feedback.findOne({
-                where: {
-                    id_student: req.body.userId,
-                    id_profesor: professorId
-                }
-            })
-            let updateObject = {}
+            let rez = null;
             for (let i = 0; i < req.body.inputu.length; i++) {
-                updateObject["Raspuns" + (i + 1)] = req.body.inputu[i];
-            }
-            if (rez) {
-                await db.Feedback.update(
-                    updateObject,
-                    {
-                        where:
+                console.log("INPUTU: ", req.body.inputu[i])
+                rez = null;
+                q = await db.Question.findAll()
+                console.log("q aici: ", q[i]['dataValues']['id'])
+                rez = await db.Feedback.findOne({
+                    where: {
+                        id_student: req.body.userId,
+                        id_profesor: professorId,
+                        id_intrebare: q[i]['dataValues']['id'],
+                    }
+                })
+
+                if (rez) {
+                    console.log("rez: ", rez)
+                    await db.Feedback.update(
                         {
-                            id_student: req.body.userId,
-                            id_profesor: professorId
-                        }
+                            raspuns : req.body.inputu[i],
+                        },
+                        {
+                            where:
+                            {
+                                id_student: req.body.userId,
+                                id_profesor: professorId,
+                                id_intrebare: q[i]['dataValues']['id'],
+                            }
+                        })
+                } else {
+                    await db.Feedback.create({
+                        id_student: req.body.userId,
+                        id_profesor: professorId,
+                        id_intrebare: q[i]['dataValues']['id'],
+                        raspuns: req.body.inputu[i]
                     })
-            } else {
-                updateObject["id_student"] = req.body.userId
-                updateObject["id_profesor"] = professorId
-                await db.Feedback.create(updateObject)
+                }
             }
         } catch (error) {
             console.log('Error on updating user: ', error);

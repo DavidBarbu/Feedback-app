@@ -9,21 +9,16 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       id_student: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.NUMBER
       },
       id_profesor: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.NUMBER
       },
-      Raspuns1: {
-        type: Sequelize.STRING
+      id_intrebare: {
+        type: Sequelize.NUMBER
       },
-      Raspuns2: {
-        type: Sequelize.STRING
-      },
-      Raspuns3: {
-        type: Sequelize.STRING
-      },
-      Raspuns4: {
+      raspuns: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       createdAt: {

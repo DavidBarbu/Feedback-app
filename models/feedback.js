@@ -2,7 +2,6 @@
 const {
   Model
 } = require('sequelize');
-const getNumberOfQuestions = require('../controllers/users');
 module.exports = (sequelize, DataTypes) => {
   class Feedback extends Model {
     /**
@@ -14,16 +13,17 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   };
-  let updateObject = {
-    id_student: DataTypes.STRING,
-    id_profesor: DataTypes.STRING,
-  }
-  for (let i = 0; i < 6; i++) {
-    updateObject["Raspuns" + (i + 1)] = DataTypes.STRING;
-  }
-  Feedback.init(updateObject, {
+  Feedback.init({
+    id_student: DataTypes.NUMBER,
+    id_profesor: DataTypes.NUMBER,
+    id_intrebare: DataTypes.NUMBER,
+    raspuns: DataTypes.STRING
+  }, {
     sequelize,
     modelName: 'Feedback',
+  },
+  {
+    initialAutoIncrement: 1,
   });
   return Feedback;
 };

@@ -6,19 +6,27 @@ module.exports = {
     const data = [];
     data.push({
       id:1,
-      intrebare: "Cum ti s-a parut cursul?"
+      intrebare: "Cum ti s-a parut cursul?",
+      createdAt: new Date(),
+      updatedAt: new Date(),
     }),
       data.push({
         id:2,
-        intrebare: "Ce nota ii dai profesorului?"
+        intrebare: "Ce nota ii dai profesorului?",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       }),
       data.push({
         id:3,
-        intrebare: "Recomanzi materia?"
+        intrebare: "Recomanzi materia?",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       }),
       data.push({
         id:4,
-        intrebare: "Altceva?"
+        intrebare: "Altceva?",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       }),
       /**
        * Add seed commands here.
