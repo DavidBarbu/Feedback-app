@@ -209,17 +209,22 @@ router.get("/profesori/:id/:materie", authorizationMiddleware, async (req, res) 
     let grupa = req.params.id
     let materie = req.params.materie
     if (userType === "student") {
-         let profi = []
+        try{
+        let profi = []
         let profesori = await db.Professor.findAll()
         for (let i = 0; i < profesori.length; i++) {
             //console.log(profesori[i]['dataValues']['materie_predata'], materie )
-            if (profesori[i]['dataValues']['materie_predata']==materie){
+            if (profesori[i]['dataValues']['materie_predata'] == materie) {
                 console.log("aici unul:", profesori[i]['dataValues']['materie_predata'])
                 profi.push(profesori[i]['dataValues']['id'])
             }
         }
-        res.render('profesori', { profi: profi, profesori: profesori});
+        console.log("profi:", profi, "materie: ", materie)
+        res.render('profesori', { profi: profi, profesori: profesori, materie: materie });
+    }catch(e){
+        res.send(e);
     }
+}
     else {
         res.send("<h1>Nu sunteti student!</h1>");
     }
@@ -229,9 +234,25 @@ router.get("/profesori/:id/:materie", authorizationMiddleware, async (req, res) 
 router.get("/materii", authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
     if (userType === "student") {
-        let materii = await db.Subject.findAll();
         let student = await db.Student.findByPk(req.body.userId)
-        res.render('materii', { materii: materii, student: student });
+        //console.log("stud:", student['dataValues']['class']);
+        let materii = await db.Subject.findAll({ where: { grupa: student['dataValues']['class'], } });
+        console.log("materii:", materii)
+        let materii_grupa = []
+        for (let i = 0; i < materii.length; i++) {
+            let k = 1
+            for (let j = 0; j < materii_grupa.length; j++) {
+                console.log(materii[i]['dataValues']['grupa'], materii_grupa[j])
+                if (materii[i]['dataValues']['nume_materie'] == materii_grupa[j]) {
+                    console.log("sunt egale")
+                    k = 0
+                }
+            }
+            if (k == 1)
+                materii_grupa.push(materii[i]['dataValues']['nume_materie'])
+        }
+        console.log(materii_grupa)
+        res.render('materii', { materii: materii, materii_grupa: materii_grupa, student: student });
     }
     else {
         res.send("<h1>Nu sunteti student!</h1>");
@@ -313,6 +334,7 @@ router.post("/delete_question", authorizationMiddleware, async (req, res) => {
             const qs = req.body.qs
             for (var i = 0; i < qs.length; i++) {
                 const question = await db.Question.destroy({ where: { id: qs[i] } })
+                const feedback = await db.Feedback.destroy({ where: { id_intrebare: qs[i] } })
             }
         } catch (error) {
             console.log('Error on updating user: ', error);
@@ -327,6 +349,15 @@ router.post("/questions", authorizationMiddleware, async (req, res) => {
         try {
             await db.Question.create({ intrebare: req.body.inputu })
             console.log("INPUTU:", req.body.inputu)
+            const feedbacks = await db.Feedback.findAll()
+            const id_intrebare_adaugata = await db.Question.findOne({ where: { intrebare: req.body.inputu } })
+            console.log("id adaugata:", id_intrebare_adaugata['dataValues']['id'])
+            const id_intrebare = feedbacks[0]['dataValues']['id_intrebare']
+            const fb = await db.Feedback.findAll({ where: { id_intrebare: id_intrebare, } })
+            for (let i = 0; i < feedbacks.length; i++) {
+                console.log("fb:", fb[i]['dataValues']['id_student'], fb[i]['dataValues']['id_profesor'])
+                await db.Feedback.create({ id_student: fb[i]['dataValues']['id_student'], id_profesor: fb[i]['dataValues']['id_profesor'], id_intrebare: id_intrebare_adaugata['dataValues']['id'] })
+            }
 
         } catch (error) {
             console.log('Error on updating user: ', error);
@@ -383,9 +414,25 @@ router.post("/chestionar/:id", authorizationMiddleware, async (req, res) => {
         } catch (error) {
             console.log('Error on updating user: ', error);
         }
-        let materii = await db.Subject.findAll();
         let student = await db.Student.findByPk(req.body.userId)
-        res.render('materii', { materii: materii, student: student });
+        //console.log("stud:", student['dataValues']['class']);
+        let materii = await db.Subject.findAll({ where: { grupa: student['dataValues']['class'], } });
+        console.log("materii:", materii)
+        let materii_grupa = []
+        for (let i = 0; i < materii.length; i++) {
+            let k = 1
+            for (let j = 0; j < materii_grupa.length; j++) {
+                console.log(materii[i]['dataValues']['grupa'], materii_grupa[j])
+                if (materii[i]['dataValues']['nume_materie'] == materii_grupa[j]) {
+                    console.log("sunt egale")
+                    k = 0
+                }
+            }
+            if (k == 1)
+                materii_grupa.push(materii[i]['dataValues']['nume_materie'])
+        }
+        console.log(materii_grupa)
+        res.render('materii', { materii: materii, materii_grupa: materii_grupa, student: student });
     } else if (userType === "profesor") {
         res.send("<h1>Nu sunteti student!</h1>");
     }

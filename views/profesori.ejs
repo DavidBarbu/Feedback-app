@@ -2,21 +2,21 @@
 
     <div class="text-center center-div mt-5" id="login">
         <div class="container w-25 border py-5 mt-5">
-            <h3>Alegeti un profesor:</h3>
-            <h3>
-                <%= profesori[0]['dataValues'].firstName%>
-            </h3>
-
+            <h3>Alegeti din urmatorii profesori care predau <%= materie%></h3>
             <div>
-                <%for(var i=0;i< profi.length;i++){ %>
+                <%console.log("debugg:",profi)%>
+                <%for(var i=0;i< profi.length;i++) {%>
+                <%for(var j=0;j< profesori.length;j++) {%>
+                <%console.log("debugg:", profesori[j]['dataValues']['id'],"i:",i,  profi[i]) %>
+                <%if(profesori[j]['dataValues']['id']==profi[i]){ %>
 
-                    <li>
-                        <%console.log("aicisa debug:", profesori[profi[i]])%>
-                            <a href="/route/chestionar/<%= profesori[profi[i]]['dataValues'].id%>">
-                                <%=profesori[profi[i]]['dataValues']['firstName']%>
-                                    <%=profesori[profi[i]]['dataValues']['lastName']%>
-                    </li>
-                    <%}%>
+                    <p>
+                            <a href="/route/chestionar/<%= profesori[j]['dataValues']['id']%>">
+                                <%console.log("DEBUG:",profi[i],profesori[j]['dataValues']['id'] )%>
+                                <%=profesori[j]['dataValues']['firstName']%>
+                                    <%=profesori[j]['dataValues']['lastName']%>
+                            </p>
+                    <%}}}%>
             </div>
             <a href="/route/dashboard" class="btn btn-success rounded-pill">Inapoi</a>
             <a href="/route/Logout" class="btn btn-success rounded-pill">Logout</a>

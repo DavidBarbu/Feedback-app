@@ -25,35 +25,24 @@
             <div name="feedback">
                 <table>
 
-                    <% for (var i=0; i < Q.length; i++) { %>
-                        <tr>
-                            <th>
-                                <%= Q[i]['dataValues']['intrebare'] %>
-                            </th>
-                            <%let k=0%>
-                                <% for (var j=0; j < fb.length; j++) { %>
-                                    <% k+=1%>
-                                    <% console.log("k=", k)%>
-                                        <% if(fb[j]['dataValues']['id_intrebare']===Q[i]['dataValues']['id']) { %>
-                                            <% console.log("BUN: ", Q[i]['dataValues']['id'], fb[j]['dataValues']['id_intrebare']) %>
-                                            <%k=0%>
-                                                <td>
-                                                    <%=fb[j]['dataValues']['raspuns']%>
-                                                </td>
+                    <% Q.forEach(function (chiu) {%>
+                        <th>
+                            <%=chiu.intrebare%>
+                        </th>
+                        <%})%>
 
-                                                <%}else { console.log("NEBUN",fb[j]['dataValues']['id_intrebare'],Q[i]['dataValues']['id']) %>
-                                                <%if(k==5) { console.log("-------")%>
-                                                    <td>
-                                                        -
-                                                    </td>
-                                                    <% k=0 %>
-                                                    <% } } %>
-
-
-                                                        <%}%>
-                                                            <%k=0%>
-                        </tr>
-                        <% } %>
+                        
+                        <% console.log("fb=", fb)%>
+                            <% for (var i=0; i < fb.length/Q.length; i++) {%>
+                                <tr>
+                                    <% for (var j=0; j < Q.length; j++) { %>
+                                        <td>
+                                            <%=fb[i*Q.length+j]['dataValues']['raspuns']%>
+                                            <%console.log("i=", i,fb[i*Q.length+j]['dataValues']['raspuns'])%>
+                                        </td>
+                                        <%}%>
+                                </tr>
+                                <%}%>
 
                 </table>
             </div>

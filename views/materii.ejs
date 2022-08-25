@@ -6,15 +6,12 @@
                         optiuni:</h3>
 
             <div>
-                <% materii.forEach(function (materie) { %>
+                <% for( var i=0; i < materii_grupa.length; i++) { %>
                     <p>
-                        <% if(materie.grupa==student.class) {%>
-                            <%=materie.grupa%>
-                        <a href="/route/profesori/<%= materie.grupa%>/<%= materie.nume_materie%>">
-                                <%= materie.nume_materie %></a>
-                                <% }%>
+                        <a href="/route/profesori/<%= student.class%>/<%= materii_grupa[i]%>">
+                                <%= materii_grupa[i]%></a>
                     </p>
-                    <% }) %>
+                    <% } %>
             </div>
             <a href="/route/dashboard" class="btn btn-success rounded-pill">Inapoi</a>
             <a href="/route/Logout" class="btn btn-success rounded-pill">Logout</a>

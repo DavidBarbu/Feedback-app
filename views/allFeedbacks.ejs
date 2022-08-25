@@ -31,36 +31,36 @@
                         <th>
                             Student evaluator
                         </th>
+
                         <% allQuestions.forEach(function (chiu) {%>
                             <th>
                                 <%=chiu.intrebare%>
                             </th>
                             <%})%>
                                 <br>
-                                <%for (var i=0; i < allFeedbacks.length; i++) { %>
-                                    <%let id_prof=allFeedbacks[i]['dataValues']['id_profesor'] %>
-                                        <%let id_stud=allFeedbacks[i]['dataValues']['id_student'] %>
-                                            <tr>
-                                                <td>
-                                                    <%=allProfessors[id_prof]['dataValues']['firstName']%>
-                                                        <%allProfessors[id_prof]['dataValues']['lastName']%>
-                                                </td>
-                                                <td>
-                                                    <%=allStudents[id_stud]['dataValues']['firstName']%>
-                                                        <%allStudents[id_stud]['dataValues']['lastName']%>
-                                                </td>
-                                                <% for (var j=1; j<=Object.keys(allFeedbacks[i]['dataValues']).length-5;
-                                                    j++) { %>
+                            
 
-                                                    <p>
-                                                        <td>
-                                                            <%= allFeedbacks[i]['dataValues']["Raspuns".concat(j)] %>
-                                                        </td>
-                                                    </p>
 
-                                                    <% }%>
-                                            </tr>
+
+                                <%for (var i=0; i < allFeedbacks.length/allQuestions.length; i++) { %>
+
+                                    <tr>
+                                    <td>
+                                        <%= allFeedbacks[i*allQuestions.length]['dataValues']['id_profesor'] %>
+                                    </td>
+                                    <td>
+                                        <%= allFeedbacks[i*allQuestions.length]['dataValues']['id_student'] %>
+                                    </td>
+                                        <%for (var j=0; j < allQuestions.length; j++) { %>
+
+                                            
+                                            <td>
+                                                <%= allFeedbacks[i*allQuestions.length+j]['dataValues']['raspuns'] %>
+                                            </td>
+
                                             <%}%>
+                                    </tr>
+                                    <%}%>
                     </table>
                 </div>
             </div>
