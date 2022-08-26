@@ -1,8 +1,9 @@
 var express = require("express");
 var router = express.Router();
-const { getAllCourses, getCourseById,
-    getAllStudents, getStudentById, createStudent, updateStudent, deleteStudent,
-    getAllProfessors, getProfessorById, createProfessor, updateProfessor, deleteProfessor,
+const { getExcel, getFeedback,
+    // getAllCourses, getCourseById,
+    // getAllStudents, getStudentById, createStudent, updateStudent, deleteStudent,
+    // getAllProfessors, getProfessorById, createProfessor, updateProfessor, deleteProfessor,
 } = require('./controllers/users');
 const { sequelize } = require("./models");
 const db = require("./models");
@@ -12,6 +13,10 @@ const { SECRET_KEY } = require("./config/jwt");
 const bodyparser = require("body-parser");
 const { localStorage } = require('node-localstorage')
 var cookieParser = require('cookie-parser');
+
+//export excel
+router.get('/export', authorizationMiddleware, getExcel)
+router.get('/feedback', authorizationMiddleware, getFeedback)
 
 // verify user
 router.post('/verify', async (req, res) => {
@@ -194,14 +199,14 @@ router.get('/professorFeedbacks', authorizationMiddleware, async (req, res) => {
 router.get("/cursuri", authorizationMiddleware => {
     res.render('login', { title: "Express", logout: "logout Successfully...!" })
 })
-router.get("/curs/:id", getCourseById);
+// router.get("/curs/:id", getCourseById);
 
 //studenti @s.unibuc.ro
-router.get("/studenti", getAllStudents);
-router.get("/student/:id", getStudentById);
-router.post("/studenti", createStudent);
-router.put("/student/:id", updateStudent);
-router.delete("/student/:id", deleteStudent);
+// router.get("/studenti", getAllStudents);
+// router.get("/student/:id", getStudentById);
+// router.post("/studenti", createStudent);
+// router.put("/student/:id", updateStudent);
+// router.delete("/student/:id", deleteStudent);
 
 //profesori @unibuc.ro
 router.get("/profesori/:id/:materie", authorizationMiddleware, async (req, res) => {
