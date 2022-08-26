@@ -15,7 +15,9 @@ module.exports = (sequelize, DataTypes) => {
   };
   Subject.init({
     nume_materie: DataTypes.STRING,
-    grupa: DataTypes.NUMBER
+    grupa: DataTypes.NUMBER,
+    semestru: DataTypes.NUMBER,
+    id_profesor: DataTypes.NUMBER
   }, {
     sequelize,
     modelName: 'Subject',

@@ -15,6 +15,8 @@ module.exports = {
     data.push({
       nume_materie: getRandomItem(materii),
       grupa: getRandomItem(nrGrupe),
+      semestru:  Math.floor(Math.random()*2+1),
+      id_profesor:  Math.floor(Math.random()*Math.random()*100+1),
       createdAt: new Date(),
       updatedAt: new Date(),
     })

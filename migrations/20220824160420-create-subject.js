@@ -14,6 +14,12 @@ module.exports = {
       grupa: {
         type: Sequelize.NUMBER
       },
+      semestru: {
+        type: Sequelize.NUMBER
+      },
+      id_profesor: {
+        type: Sequelize.NUMBER
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

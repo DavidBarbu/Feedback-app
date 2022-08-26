@@ -20,9 +20,6 @@ module.exports = {
       password: {
         type: Sequelize.STRING
       },
-      materie_predata: {
-        type: Sequelize.STRING
-      },
       userType: {
         type: Sequelize.STRING
       },
