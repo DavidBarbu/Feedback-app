@@ -28,9 +28,6 @@
                         <th>
                             Profesor evaluat
                         </th>
-                        <th>
-                            Student evaluator
-                        </th>
 
                         <% allQuestions.forEach(function (chiu) {%>
                             <th>
@@ -47,9 +44,6 @@
                                     <tr>
                                     <td>
                                         <%= allFeedbacks[i*allQuestions.length]['dataValues']['id_profesor'] %>
-                                    </td>
-                                    <td>
-                                        <%= allFeedbacks[i*allQuestions.length]['dataValues']['id_student'] %>
                                     </td>
                                         <%for (var j=0; j < allQuestions.length; j++) { %>
 
