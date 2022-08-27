@@ -470,10 +470,6 @@ router.get('/professorFeedbacks', authorizationMiddleware, async (req, res) => {
     }
 })
 
-//cursuri
-router.get("/cursuri", authorizationMiddleware => {
-    res.render('login', { title: "Express", logout: "logout Successfully...!" })
-})
 
 //profesori @unibuc.ro
 router.get("/profesori/:id/:materie", authorizationMiddleware, async (req, res) => {
@@ -563,6 +559,16 @@ router.get("/profesor/:id", authorizationMiddleware, async (req, res) => {
 
 })
 
+router.get("/course/:id", authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    const courseId = req.params.id;
+    if (userType === "conducere") {
+        const curs = await db.Subject.findByPk(courseId)
+        res.render('editCourse', { body: curs });
+        //res.send("<h1>Gata si editul</h1>");
+    } else res.send("<h1>Nu aveti acces!!</h1>");
+})
+
 router.post("/editStudent/:id", authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
     const studentId = req.params.id;
@@ -583,6 +589,18 @@ router.post("/editProfessor/:id", authorizationMiddleware, async (req, res) => {
         //res.send("<h1>Gata si editul</h1>");
     } else res.send("<h1>Nu aveti acces!!</h1>");
 })
+
+router.post("/editCourse/:id", authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    const courseId = req.params.id;
+    if (userType === "conducere") {
+        db.Subject.update({ nume_materie: req.body.nume_materie, grupa: req.body.grupa, semestru: req.body.semestru, id_profesor: req.body.id_profesor }, { where: { id: courseId } })
+        const curs = await db.Subject.findByPk(courseId)
+        res.render('editCourse', { body: curs });
+        //res.send("<h1>Gata si editul</h1>");
+    } else res.send("<h1>Nu aveti acces!!</h1>");
+})
+
 
 router.get("/deleteProfessor/:id", authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
@@ -610,6 +628,14 @@ router.get("/chestionar/:id", authorizationMiddleware, async (req, res) => {
     }
     else { res.send("smth went wrong") }
 });
+
+router.get("/courses", authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    if (userType === "conducere") {
+        const cursuri = await db.Subject.findAll()
+        res.render('cursuri', { cursuri: cursuri });
+    } else res.send("<h1>Nu aveti acces!!</h1>");
+})
 
 router.get("/questions", authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType

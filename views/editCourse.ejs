@@ -1,0 +1,49 @@
+<%- include('header') -%>
+
+    <div class="text-center center-div mt-5" id="login">
+        <div class="container w-25 border py-5 mt-5">
+            <h3>Editati cursul:</h3>
+            <h3>
+                <%= body.nume_materie%>
+            </h3>
+            <form action="/route/editCourse/<%= body.id%>" method="POST" class="pt-3">
+                <div class="form-group">
+                    <br>
+
+                    <div>
+
+
+                        <p>Nume curs: <%= body.nume_materie %>
+                                <input type="text" name="nume_materie" class="form-control">
+
+                        </p>
+
+                        <p>Grupa: <%= body.grupa %>
+                                <input type="text" name="grupa" class="form-control">
+
+                        </p>
+
+                        <p>Semestru: <%= body.semestru %>
+                                <input type="text" name="semestru" class="form-control">
+                        </p>
+                        <p>ID Profesor: <%= body.id_profesor %>
+                                <input type="text" name="id_profesor" class="form-control">
+                        </p>
+
+                    </div>
+
+                </div>
+                <button type="submit" class="btn btn-success rounded-pill">Submit</button>
+                <br>
+                <br>
+                <a href="/route/courses" class="btn btn-success rounded-pill">Cursuri</a>
+                <br>
+                <br>
+                <a href="/route/Logout" class="btn btn-success rounded-pill">Logout</a>
+            </form>
+
+
+        </div>
+    </div>
+
+    <%- include('footer') -%>

@@ -1,0 +1,92 @@
+<%- include('header') -%>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        .row {
+            margin-left: -5px;
+            margin-right: -5px;
+        }
+
+        .column {
+            float: left;
+            width: 50%;
+            padding: 35px;
+        }
+
+        .row::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+            border: 1px solid #ddd;
+            padding-left: 16px;
+        }
+
+        th,
+        td {
+            border: 1px solid #000000;
+            text-align: left;
+            padding: 16px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+    <div class="text-center center-div" id="feedback">
+
+        <h2 class="font-weight-bold">Cursuri</h2>
+
+        <div class="row">
+            <div class="column">
+                <h2>Studentii:</h2>
+                <table>
+                    <tr>
+                        <th>ID</th>
+                        <th>MATERIE</th>
+                        <th>GRUPA</th>
+                        <th>SEMESTRU</th>
+                        <th>ID PROFESOR</th>
+                    </tr>
+                    <% cursuri.forEach(function (q) { %>
+                        <tr>
+                            <td>
+                                <%=q.id%>
+                            </td>
+                            <td>
+                                <a href="/route/course/<%= q.id%>">
+                                    <%=q.nume_materie%>
+                                </a>
+                            </td>
+                            <td>
+                                <%=q.grupa%>
+                            </td>
+                            <td>
+                                <%=q.semestru%>
+                            </td>
+                            <td>
+                                <%=q.id_profesor%>
+                            </td>
+                        </tr>
+                        <% }) %>
+
+                </table>
+            </div>
+        </div>
+        <br>
+        <a href=" /route/dashboard" class="btn btn-success rounded-pill">Inapoi</a>
+        <br><br>
+        <a href="/route/logout" class="btn btn-success rounded-pill">Logout</a>
+
+    </div>
+
+
+    <%- include('footer') -%>
