@@ -1,59 +1,6 @@
 const db = require("../models");
 const excelJS = require("exceljs");
 
-// module.exports.pass_crypt = async (req, res) => {
-
-//     //register
-//     const username = req.body.username;
-//     const password = req.body.password;
-
-//     bcrypt.hash(password, saltRounds, (err, hash) => {
-//         if (err) {
-//             console.log(err);
-//         }
-
-//         db.query(
-//             "INSERT INTO users (username, password) VALUES (?,?)",
-//             [username, hash],
-//             (err, result) => {
-//                 console.log(err);
-//             }
-//         );
-//     });
-
-
-//     // //login
-//     // const username = req.body.username;
-//     // const password = req.body.password;
-
-//     // db.query(
-//     //     "SELECT * FROM users WHERE username = ?;",
-//     //     username,
-//     //     (err, result) => {
-//     //         if (err) {
-//     //             res.json({ err: err });
-//     //         }
-
-//     //         if (result.length > 0) {
-//     //             bcrypt.compare(password, result[0].password, (error, response) => {
-//     //                 if (response) {
-
-//     //                     const accessToken = jwt.sign(
-//     //                         { username: result[0].username, id: result[0].id },
-//     //                         "licentaSecret"
-//     //                     );
-//     //                     res.json({ token: accessToken, username: result[0].username, id: result[0].id });
-//     //                 } else {
-//     //                     res.json({ error: "Wrong username/password combination!" });
-//     //                 }
-//     //             });
-//     //         } else {
-//     //             res.json({ error: "User doesn't exist" });
-//     //         }
-//     //     }
-//     // );
-// }
-
 module.exports.getExcel = async (req, res) => {
     const workbook = new excelJS.Workbook();
     const worksheetStudenti = workbook.addWorksheet("Lista Studenti");
@@ -288,15 +235,4 @@ module.exports.getFeedback = async (req, res) => {
             message: "Something went wrong",
         });
     }
-}
-
-module.exports.getStudents = (req, res) => {
-
-
-
-
-
-
-
-    res.send("nimic")
 }

@@ -5,6 +5,11 @@
         <div class="container w-25 border py-5">
             <div class="title pb-5">
                 <h2 class="font-weight-bold">Login </h2>
+                <% if(locals.logout){ %>
+                    <div class=" alert-success text-center">
+                        <%= logout %>
+                    </div>
+                <% } %>
             </div>
             <form>
                 <div class="form-group">
@@ -15,6 +20,7 @@
                 <div class="form-group">
                     <input id="password" type="password" class="form-control" name="password" placeholder="password">
                 </div>
+                
                 <button id="get" class="btn btn-success rounded-pill">Login</button>
                 <!-- <a href='/route/dashboard' class="btn btn-success rounded-pill">Dashboard</a> -->
             </form>

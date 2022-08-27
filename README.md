@@ -2,4 +2,4 @@
 
 ``` npm install ```
 
-This command will install all the dependancy in the project.
+This command will install all the dependancies in the project.

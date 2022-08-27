@@ -14,12 +14,282 @@ const { SECRET_KEY } = require("./config/jwt");
 const bodyparser = require("body-parser");
 const { localStorage } = require('node-localstorage')
 var cookieParser = require('cookie-parser');
-const workbookStudenti = xlsx.readFile('./files/Studenti.xlsx');
-const workbookProfesori = xlsx.readFile('./files/Profesori.xlsx');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const excelJS = require("exceljs");
+
+//import profesori
+router.get('/importProfesori', async (req, res) => {
+    var workbook = new excelJS.Workbook();
+    workbook.xlsx.readFile('./files/Import.xlsx')
+        .then(function () {
+            var worksheet = workbook.getWorksheet('Lista Profesori')
+            worksheet.eachRow({ includeEmpty: false }, async function (row, rowNumber) {
+                try {
+                    //console.log(parseInt(row.values[1]),String(row.values[2]),String(row.values[3]),String(row.values[4]),String(row.values[5]),String(row.values[6]), new Date(), new Date())
+                    await db.Professor.create({ id: parseInt(row.values[1]), firstName: String(row.values[2]), lastName: String(row.values[3]), email: String(row.values[4]), password: String(row.values[5]), userType: String(row.values[6]), createdAt: new Date(), updatedAt: new Date() })
+                } catch (e) { console.log("error", e) }
+            });
+        });
+        setTimeout(async function () {
+            const last = await db.Professor.findAll();
+            const ll = last.length-1
+            console.log(last[ll]['dataValues']['id'])
+            await db.Professor.destroy({ where: { id: last[ll]['dataValues']['id'] } })
+        }, 10000)
+    res.send("Gata frt")
+})
+
+//import admini
+router.get('/importAdmini', async (req, res) => {
+    var workbook = new excelJS.Workbook();
+    workbook.xlsx.readFile('./files/Import.xlsx')
+        .then(function () {
+            var worksheet = workbook.getWorksheet('Lista Admini')
+            worksheet.eachRow({ includeEmpty: false }, async function (row, rowNumber) {
+                try {
+                    //console.log(parseInt(row.values[1]),String(row.values[2]),String(row.values[3]),String(row.values[4]),String(row.values[5]),String(row.values[6]), new Date(), new Date())
+                    await db.Admin.create({ id: parseInt(row.values[1]), email: String(row.values[2]), password: String(row.values[3]), userType: String(row.values[4]), createdAt: new Date(), updatedAt: new Date() })
+                } catch (e) { console.log("error", e) }
+            });
+        });
+        setTimeout(async function () {
+            const last = await db.Admin.findAll();
+            const ll = last.length-1
+            await db.Admin.destroy({ where: { id: last[ll]['dataValues']['id'] } })
+        }, 10000)
+        
+    res.send("Gata frt")
+})
+
+//import plan
+router.get('/importPlan', async (req, res) => {
+    var workbook = new excelJS.Workbook();
+    workbook.xlsx.readFile('./files/Import.xlsx')
+        .then(function () {
+            var worksheet = workbook.getWorksheet('Lista Materii')
+            worksheet.eachRow({ includeEmpty: false }, async function (row, rowNumber) {
+                try {
+                    //console.log(parseInt(row.values[1]),String(row.values[2]),String(row.values[3]),String(row.values[4]),String(row.values[5]),String(row.values[6]), new Date(), new Date())
+                    await db.Subject.create({ id: parseInt(row.values[1]), nume_materie: String(row.values[2]), grupa: parseInt(row.values[3]), semestru: parseInt(row.values[4]), id_profesor: parseInt(row.values[5]), createdAt: new Date(), updatedAt: new Date() })
+                } catch (e) { console.log("error", e) }
+            });
+        });
+        setTimeout(async function () {
+            const last = await db.Subject.findAll();
+            const ll = last.length-1
+            await db.Subject.destroy({ where: { id: last[ll]['dataValues']['id'] } })
+        }, 10000)
+    res.send("Gata frt")
+})
+
+//import intrebari
+router.get('/importIntrebari', async (req, res) => {
+    var workbook = new excelJS.Workbook();
+    workbook.xlsx.readFile('./files/Import.xlsx')
+        .then(function () {
+            var worksheet = workbook.getWorksheet('Lista Intrebari')
+            worksheet.eachRow({ includeEmpty: false }, async function (row, rowNumber) {
+                try {
+                    //console.log(parseInt(row.values[1]),String(row.values[2]),String(row.values[3]),String(row.values[4]),String(row.values[5]),String(row.values[6]), new Date(), new Date())
+                    await db.Question.create({ id: parseInt(row.values[1]), intrebare: String(row.values[2]), createdAt: new Date(), updatedAt: new Date() })
+                } catch (e) { console.log("error", e) }
+            });
+        });
+        setTimeout(async function () {
+            const last = await db.Question.findAll();
+            const ll = last.length-1
+            await db.Question.destroy({ where: { id: last[ll]['dataValues']['id'] } })
+        }, 10000)
+    res.send("Gata frt")
+})
+
+//import studenti
+router.get('/importStudenti', async (req, res) => {
+    var workbook = new excelJS.Workbook();
+    workbook.xlsx.readFile('./files/Import.xlsx')
+        .then(function () {
+            var worksheet = workbook.getWorksheet('Lista Studenti');
+
+            worksheet.eachRow({ includeEmpty: false }, async function (row, rowNumber) {
+                try {
+                    await db.Student.create({ id: parseInt(row.values[1]), firstName: String(row.values[2]), lastName: String(row.values[3]), email: String(row.values[4]), password: String(row.values[5]), userType: String(row.values[6]), class: parseInt(row.values[7]), year: parseInt(row.values[8]), createdAt: new Date(), updatedAt: new Date() })
+                } catch (e) { console.log("error", e) }
+            });
+        });
+        setTimeout(async function () {
+            const last = await db.Student.findAll();
+            const ll = last.length-1
+            await db.Student.destroy({ where: { id: last[ll]['dataValues']['id'] } })
+        }, 10000)
+    res.send("Da frate")
+})
+
+// router.get('/importStudenti', async (req, res) => {
+//     const worksheet = workbookStudenti.Sheets[workbookStudenti.SheetNames[0]];
+//     let posts = [];
+//     let post = {};
+
+//     for (let cell in worksheet) {
+//         const cellAsString = cell.toString();
+
+//         if (cellAsString[1] !== 'r' && cellAsString[1] !== 'm' && cellAsString[1] > 1) {
+//             if (cellAsString[0] === 'A') {
+//                 post.id = worksheet[cell].v;
+//             }
+//             if (cellAsString[0] === 'B') {
+//                 post.firstName = worksheet[cell].v;
+//             }
+//             if (cellAsString[0] === 'C') {
+//                 post.lastName = worksheet[cell].v;
+//             }
+//             if (cellAsString[0] === 'D') {
+//                 post.email = worksheet[cell].v;
+//             }
+//             if (cellAsString[0] === 'E') {
+//                 post.password = worksheet[cell].v;
+//             }
+//             if (cellAsString[0] === 'F') {
+//                 post.userType = worksheet[cell].v;
+//             }
+//             if (cellAsString[0] === 'G') {
+//                 post.class = worksheet[cell].v;
+//             }
+//             if (cellAsString[0] === 'H') {
+//                 post.year = worksheet[cell].v;
+//                 posts.push(post);
+//                 post = {};
+//             }
+//         }else{console.log("cell:", cellAsString[1])}
+//     }
+//     console.log("length: " + posts.length)
+//     // for (var i = 0; i < posts.length; i++) {
+//     //     //console.log(posts[i].email)
+//     //     await db.Student.create({
+//     //         id: posts[i].id, firstName: posts[i].firstName,
+//     //         lastName: posts[i].lastName, email: posts[i].email, password: posts[i].password,
+//     //         userType: posts[i].userType, class: posts[i].class, year: posts[i].year,
+//     //     })
+//     // }
+//     res.json(posts)
+// })
 
 
+//export excel
+
+router.get('/export', authorizationMiddleware, getExcel)
+
+router.get('/feedback', authorizationMiddleware, getFeedback)
+
+// verify user
+router.post('/verify', async (req, res) => {
+    const body = req.body;
+    const email = body.email;
+    const password = body.password;
+    let rez = await db.Student.findAll({ where: { email: email, } });
+    console.log(rez)
+    if (rez.length === 0) {
+        let rez = await db.Professor.findAll({ where: { email: email, } });
+        console.log(rez)
+        if (rez.length === 0) {
+            let rez = await db.Admin.findAll({ where: { email: email, } });
+            console.log(rez)
+            if (rez.length === 0) {
+                res.send("Nu exista un cont cu acest email.")
+            }
+            console.log(rez)
+            try {
+                const id = rez[0].id.toString()
+                const userType = rez[0].userType.toString()
+                if (email.toString() === rez[0].email.toString() && password.toString() === rez[0].password.toString()) {
+                    const token = jwt.sign({ id, userType }, SECRET_KEY);
+                    res
+                        .cookie("access_token", token, {
+                            httpOnly: true,
+                            secure: process.env.NODE_ENV === "production",
+                        })
+                        .status(200)
+                        .json({ message: "Logged in successfully 😊 👌" });
+                } else bcrypt.compare(password.toString(), rez[0].password.toString(), (error, response) => {
+                    if (response) {
+                        const token = jwt.sign({ id, userType }, SECRET_KEY);
+                        res
+                            .cookie("access_token", token, {
+                                httpOnly: true,
+                                secure: process.env.NODE_ENV === "production",
+                            })
+                            .status(200)
+                            .json({ message: "Logged in successfully 😊 👌" });
+                    } else {
+                        res.json("Nu s bune")
+                    }
+                })
+            } catch (e) {
+                console.error(e)
+            }
+        } else {
+            const id = rez[0].id.toString()
+            const userType = rez[0].userType.toString()
+            try {
+                if (email.toString() === rez[0].email.toString() && password.toString() === rez[0].password.toString()) {
+                    const token = jwt.sign({ id, userType }, SECRET_KEY);
+                    res
+                        .cookie("access_token", token, {
+                            httpOnly: true,
+                            secure: process.env.NODE_ENV === "production",
+                        })
+                        .status(200)
+                        .json({ message: "Logged in successfully 😊 👌" });
+                } else bcrypt.compare(password.toString(), rez[0].password.toString(), (error, response) => {
+                    if (response) {
+                        const token = jwt.sign({ id, userType }, SECRET_KEY);
+                        res
+                            .cookie("access_token", token, {
+                                httpOnly: true,
+                                secure: process.env.NODE_ENV === "production",
+                            })
+                            .status(200)
+                            .json({ message: "Logged in successfully 😊 👌" });
+                    } else {
+                        res.json("Nu s bune")
+                    }
+                })
+            } catch (e) {
+                console.error(e)
+            }
+        }
+    } else {
+        const id = rez[0].id.toString()
+        const userType = rez[0].userType.toString()
+        try {
+            if (email.toString() === rez[0].email.toString() && password.toString() === rez[0].password.toString()) {
+                const token = jwt.sign({ id, userType }, SECRET_KEY);
+                res
+                    .cookie("access_token", token, {
+                        httpOnly: true,
+                        secure: process.env.NODE_ENV === "production",
+                    })
+                    .status(200)
+                    .json({ message: "Logged in successfully 😊 👌" });
+            } else bcrypt.compare(password.toString(), rez[0].password.toString(), (error, response) => {
+                if (response) {
+                    const token = jwt.sign({ id, userType }, SECRET_KEY);
+                    res
+                        .cookie("access_token", token, {
+                            httpOnly: true,
+                            secure: process.env.NODE_ENV === "production",
+                        })
+                        .status(200)
+                        .json({ message: "Logged in successfully 😊 👌" });
+                } else {
+                    res.json("Nu s bune")
+                }
+            })
+        } catch (e) {
+            console.error(e)
+        }
+    }
+});
 
 //modificare parola
 router.post('/modificareParola', authorizationMiddleware, async (req, res) => {
@@ -149,223 +419,7 @@ router.post('/modificareParola', authorizationMiddleware, async (req, res) => {
     }
 })
 
-//import profesori
-router.get('/importProfesori', authorizationMiddleware, async (req, res) => {
-    const worksheet = workbookProfesori.Sheets[workbookProfesori.SheetNames[0]];
-    try {
-        let posts = [];
-        let post = {};
-
-        for (let cell in worksheet) {
-            const cellAsString = cell.toString();
-
-            if (cellAsString[1] !== 'r' && cellAsString[1] !== 'm' && cellAsString[1] > 1) {
-                if (cellAsString[0] === 'A') {
-                    post.id = worksheet[cell].v;
-                }
-                if (cellAsString[0] === 'B') {
-                    post.firstName = worksheet[cell].v;
-                }
-                if (cellAsString[0] === 'C') {
-                    post.lastName = worksheet[cell].v;
-                }
-                if (cellAsString[0] === 'D') {
-                    post.email = worksheet[cell].v;
-                }
-                if (cellAsString[0] === 'E') {
-                    post.password = worksheet[cell].v;
-                }
-                if (cellAsString[0] === 'F') {
-                    post.userType = worksheet[cell].v;
-                    posts.push(post);
-                    post = {};
-                }
-            }
-        }
-        console.log("length: " + posts.length)
-        for (var i = 0; i < posts.length; i++) {
-            //console.log(posts[i].email)
-            console.log("insert:", posts[i].id, posts[i].firstName,
-                posts[i].lastName, posts[i].email, posts[i].password,
-                posts[i].userType)
-            await db.Professor.create({
-                id: posts[i].id, firstName: posts[i].firstName,
-                lastName: posts[i].lastName, email: posts[i].email, password: posts[i].password,
-                userType: posts[i].userType
-            })
-        }
-
-        res.json(posts)
-    } catch (e) {
-        res.send(e)
-    }
-})
-
-//import studenti
-router.get('/importStudenti', authorizationMiddleware, async (req, res) => {
-    const worksheet = workbookStudenti.Sheets[workbookStudenti.SheetNames[0]];
-
-    let posts = [];
-    let post = {};
-
-    for (let cell in worksheet) {
-        const cellAsString = cell.toString();
-
-        if (cellAsString[1] !== 'r' && cellAsString[1] !== 'm' && cellAsString[1] > 1) {
-            if (cellAsString[0] === 'A') {
-                post.id = worksheet[cell].v;
-            }
-            if (cellAsString[0] === 'B') {
-                post.firstName = worksheet[cell].v;
-            }
-            if (cellAsString[0] === 'C') {
-                post.lastName = worksheet[cell].v;
-            }
-            if (cellAsString[0] === 'D') {
-                post.email = worksheet[cell].v;
-            }
-            if (cellAsString[0] === 'E') {
-                post.password = worksheet[cell].v;
-            }
-            if (cellAsString[0] === 'F') {
-                post.userType = worksheet[cell].v;
-            }
-            if (cellAsString[0] === 'G') {
-                post.class = worksheet[cell].v;
-            }
-            if (cellAsString[0] === 'H') {
-                post.year = worksheet[cell].v;
-                posts.push(post);
-                post = {};
-            }
-        }
-    }
-    console.log("length: " + posts.length)
-    for (var i = 0; i < posts.length; i++) {
-        //console.log(posts[i].email)
-        await db.Student.create({
-            id: posts[i].id, firstName: posts[i].firstName,
-            lastName: posts[i].lastName, email: posts[i].email, password: posts[i].password,
-            userType: posts[i].userType, class: posts[i].class, year: posts[i].year,
-        })
-    }
-    res.json(posts)
-})
-
-//export excel
-router.get('/export', authorizationMiddleware, getExcel)
-router.get('/feedback', authorizationMiddleware, getFeedback)
-
-// verify user
-router.post('/verify', async (req, res) => {
-    const body = req.body;
-    const email = body.email;
-    const password = body.password;
-    let rez = await db.Student.findAll({ where: { email: email, } });
-    console.log(rez)
-    if (rez.length === 0) {
-        let rez = await db.Professor.findAll({ where: { email: email, } });
-        console.log(rez)
-        if (rez.length === 0) {
-            let rez = await db.Admin.findAll({ where: { email: email, } });
-            console.log(rez)
-            if (rez.length === 0) {
-                res.send("Nu exista un cont cu acest email.")
-            }
-            console.log(rez)
-            try {
-                const id = rez[0].id.toString()
-                const userType = rez[0].userType.toString()
-                if (email.toString() === rez[0].email.toString() && password.toString() === rez[0].password.toString()) {
-                    const token = jwt.sign({ id, userType }, SECRET_KEY);
-                    res
-                        .cookie("access_token", token, {
-                            httpOnly: true,
-                            secure: process.env.NODE_ENV === "production",
-                        })
-                        .status(200)
-                        .json({ message: "Logged in successfully 😊 👌" });
-                } else bcrypt.compare(password.toString(), rez[0].password.toString(), (error, response) => {
-                    if (response) {
-                        const token = jwt.sign({ id, userType }, SECRET_KEY);
-                        res
-                            .cookie("access_token", token, {
-                                httpOnly: true,
-                                secure: process.env.NODE_ENV === "production",
-                            })
-                            .status(200)
-                            .json({ message: "Logged in successfully 😊 👌" });
-                    } else {
-                        res.json("Nu s bune")
-                    }
-                })
-            } catch (e) {
-                console.error(e)
-            }
-        } else {
-            const id = rez[0].id.toString()
-            const userType = rez[0].userType.toString()
-            try {
-                if (email.toString() === rez[0].email.toString() && password.toString() === rez[0].password.toString()) {
-                    const token = jwt.sign({ id, userType }, SECRET_KEY);
-                    res
-                        .cookie("access_token", token, {
-                            httpOnly: true,
-                            secure: process.env.NODE_ENV === "production",
-                        })
-                        .status(200)
-                        .json({ message: "Logged in successfully 😊 👌" });
-                } else bcrypt.compare(password.toString(), rez[0].password.toString(), (error, response) => {
-                    if (response) {
-                        const token = jwt.sign({ id, userType }, SECRET_KEY);
-                        res
-                            .cookie("access_token", token, {
-                                httpOnly: true,
-                                secure: process.env.NODE_ENV === "production",
-                            })
-                            .status(200)
-                            .json({ message: "Logged in successfully 😊 👌" });
-                    } else {
-                        res.json("Nu s bune")
-                    }
-                })
-            } catch (e) {
-                console.error(e)
-            }
-        }
-    } else {
-        const id = rez[0].id.toString()
-        const userType = rez[0].userType.toString()
-        try {
-            if (email.toString() === rez[0].email.toString() && password.toString() === rez[0].password.toString()) {
-                const token = jwt.sign({ id, userType }, SECRET_KEY);
-                res
-                    .cookie("access_token", token, {
-                        httpOnly: true,
-                        secure: process.env.NODE_ENV === "production",
-                    })
-                    .status(200)
-                    .json({ message: "Logged in successfully 😊 👌" });
-            } else bcrypt.compare(password.toString(), rez[0].password.toString(), (error, response) => {
-                if (response) {
-                    const token = jwt.sign({ id, userType }, SECRET_KEY);
-                    res
-                        .cookie("access_token", token, {
-                            httpOnly: true,
-                            secure: process.env.NODE_ENV === "production",
-                        })
-                        .status(200)
-                        .json({ message: "Logged in successfully 😊 👌" });
-                } else {
-                    res.json("Nu s bune")
-                }
-            })
-        } catch (e) {
-            console.error(e)
-        }
-    }
-});
-
+//route for dashboard
 router.get('/dashboard', authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
     let student = await db.Student.findByPk(req.body.userId);
@@ -400,7 +454,7 @@ router.get('/logout', (req, res) => {
     return res
         .clearCookie("access_token")
         .status(200)
-        .render('login')
+        .render('login', { logout: "Iesi acas' " })
 });
 
 // route for questionnaire
@@ -431,6 +485,7 @@ router.get('/myProfessorProfile', authorizationMiddleware, async (req, res) => {
         res.send("Nu sunteti profesor!");
     }
 })
+
 //admin profile
 router.get('/myAdminProfile', authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
@@ -469,7 +524,6 @@ router.get('/professorFeedbacks', authorizationMiddleware, async (req, res) => {
         res.send("Nu sunteti profesor!");
     }
 })
-
 
 //profesori @unibuc.ro
 router.get("/profesori/:id/:materie", authorizationMiddleware, async (req, res) => {
@@ -579,6 +633,7 @@ router.post("/editStudent/:id", authorizationMiddleware, async (req, res) => {
     } else res.send("<h1>Nu aveti acces!!</h1>");
 
 })
+
 router.post("/editProfessor/:id", authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
     const professorId = req.params.id;
@@ -601,7 +656,6 @@ router.post("/editCourse/:id", authorizationMiddleware, async (req, res) => {
     } else res.send("<h1>Nu aveti acces!!</h1>");
 })
 
-
 router.get("/deleteProfessor/:id", authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
     const professorId = req.params.id;
@@ -613,7 +667,6 @@ router.get("/deleteProfessor/:id", authorizationMiddleware, async (req, res) => 
     } else res.send("<h1>Nu aveti acces!!</h1>");
 
 })
-
 
 router.get("/chestionar/:id", authorizationMiddleware, async (req, res) => {
     let rez = await db.Question.findAll();
