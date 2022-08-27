@@ -86,7 +86,7 @@ router.post('/modificareParola', authorizationMiddleware, async (req, res) => {
             }
             else console.log("Parola veche nu este buna!")
         })
-    }else if (userType === 'admin') {
+    } else if (userType === 'admin') {
         const profile = await db.Admin.findByPk(req.body.userId)
         if (profile.password == req.body.parolaVeche) {
             if (req.body.parolaNoua1 == req.body.parolaNoua2) {
@@ -116,7 +116,7 @@ router.post('/modificareParola', authorizationMiddleware, async (req, res) => {
             }
             else console.log("Parola veche nu este buna!")
         })
-    }else if (userType === 'conducere') {
+    } else if (userType === 'conducere') {
         const profile = await db.Admin.findByPk(req.body.userId)
         if (profile.password == req.body.parolaVeche) {
             if (req.body.parolaNoua1 == req.body.parolaNoua2) {
@@ -146,7 +146,7 @@ router.post('/modificareParola', authorizationMiddleware, async (req, res) => {
             }
             else console.log("Parola veche nu este buna!")
         })
-    } 
+    }
 })
 
 //import profesori
@@ -289,12 +289,12 @@ router.post('/verify', async (req, res) => {
                     if (response) {
                         const token = jwt.sign({ id, userType }, SECRET_KEY);
                         res
-                        .cookie("access_token", token, {
-                            httpOnly: true,
-                            secure: process.env.NODE_ENV === "production",
-                        })
-                        .status(200)
-                        .json({ message: "Logged in successfully 😊 👌" });
+                            .cookie("access_token", token, {
+                                httpOnly: true,
+                                secure: process.env.NODE_ENV === "production",
+                            })
+                            .status(200)
+                            .json({ message: "Logged in successfully 😊 👌" });
                     } else {
                         res.json("Nu s bune")
                     }
@@ -319,12 +319,12 @@ router.post('/verify', async (req, res) => {
                     if (response) {
                         const token = jwt.sign({ id, userType }, SECRET_KEY);
                         res
-                        .cookie("access_token", token, {
-                            httpOnly: true,
-                            secure: process.env.NODE_ENV === "production",
-                        })
-                        .status(200)
-                        .json({ message: "Logged in successfully 😊 👌" });
+                            .cookie("access_token", token, {
+                                httpOnly: true,
+                                secure: process.env.NODE_ENV === "production",
+                            })
+                            .status(200)
+                            .json({ message: "Logged in successfully 😊 👌" });
                     } else {
                         res.json("Nu s bune")
                     }
@@ -350,12 +350,12 @@ router.post('/verify', async (req, res) => {
                 if (response) {
                     const token = jwt.sign({ id, userType }, SECRET_KEY);
                     res
-                    .cookie("access_token", token, {
-                        httpOnly: true,
-                        secure: process.env.NODE_ENV === "production",
-                    })
-                    .status(200)
-                    .json({ message: "Logged in successfully 😊 👌" });
+                        .cookie("access_token", token, {
+                            httpOnly: true,
+                            secure: process.env.NODE_ENV === "production",
+                        })
+                        .status(200)
+                        .json({ message: "Logged in successfully 😊 👌" });
                 } else {
                     res.json("Nu s bune")
                 }
@@ -531,16 +531,6 @@ router.get("/materii", authorizationMiddleware, async (req, res) => {
     }
 });
 
-router.get("/editStudent/:id", authorizationMiddleware, async (req, res) => {
-    let userType = req.body.userType
-    const studentId = req.params.id;
-    if (userType === "conducere") {
-        const student = await db.Student.findByPk(studentId)
-        res.render('editStudent', { body: (await student) });
-    } else res.send("<h1>Nu aveti acces!!</h1>");
-
-})
-
 router.get("/deleteStudent/:id", authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
     const studentId = req.params.id;
@@ -553,14 +543,45 @@ router.get("/deleteStudent/:id", authorizationMiddleware, async (req, res) => {
 
 })
 
-router.get("/editProfessor/:id", authorizationMiddleware, async (req, res) => {
+router.get("/student/:id", authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    const studentId = req.params.id;
+    if (userType === "conducere") {
+        const student = await db.Student.findByPk(studentId)
+        res.render('editStudent', { body: student });
+    } else res.send("<h1>Nu aveti acces!!</h1>");
+
+})
+
+router.get("/profesor/:id", authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
     const professorId = req.params.id;
     if (userType === "conducere") {
         const profesor = await db.Professor.findByPk(professorId)
-        res.render('editProfessor', { body: (await profesor) });
+        res.render('editProfessor', { body: profesor });
     } else res.send("<h1>Nu aveti acces!!</h1>");
 
+})
+
+router.post("/editStudent/:id", authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    const studentId = req.params.id;
+    if (userType === "conducere") {
+        db.Student.update({ firstName: req.body.firstName, lastName: req.body.lastName, email: req.body.email, class: req.body.class, year: req.body.year }, { where: { id: studentId } })
+        const student = await db.Student.findByPk(studentId)
+        res.render('editStudent', { body: student });
+    } else res.send("<h1>Nu aveti acces!!</h1>");
+
+})
+router.post("/editProfessor/:id", authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    const professorId = req.params.id;
+    if (userType === "conducere") {
+        db.Professor.update({ firstName: req.body.firstName, lastName: req.body.lastName, email: req.body.email }, { where: { id: professorId } })
+        const profesor = await db.Professor.findByPk(professorId)
+        res.render('editProfessor', { body: profesor });
+        //res.send("<h1>Gata si editul</h1>");
+    } else res.send("<h1>Nu aveti acces!!</h1>");
 })
 
 router.get("/deleteProfessor/:id", authorizationMiddleware, async (req, res) => {

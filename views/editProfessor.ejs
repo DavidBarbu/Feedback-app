@@ -3,16 +3,48 @@
     <div class="text-center center-div mt-5" id="login">
         <div class="container w-25 border py-5 mt-5">
             <h3>Editati profesorul:</h3>
-            <h3><%= body.firstName%> <%= body.lastName%></h3>
+            <h3>
+                <%= body.firstName%>
+                    <%= body.lastName%>
+            </h3>
+            <form action="/route/editProfessor/<%= body.id%>" method="POST" class="pt-3">
+                <div class="form-group">
+                    <br>
 
-            <div>
-                
-                <% for(var i = 0; i < Object.keys(body['dataValues']).length; i++)%><p><%= console.log(body['dataValues']['id']) %></p>
-            </div>
+                    <div>
 
-            <a href="/route/deleteProfessor/<%= body.id%>" class="btn btn-success rounded-pill">Sterge profesor</a>
-            <a href="/route/db" class="btn btn-success rounded-pill">Inapoi</a>
-            <a href="/route/Logout" class="btn btn-success rounded-pill">Logout</a>
+
+                        <p>Nume de familie: <%= body.firstName %>
+                                <input type="text" name="firstName" class="form-control">
+
+                        </p>
+
+                        <p>Prenume: <%= body.lastName %>
+                                <input type="text" name="lastName" class="form-control">
+
+                        </p>
+
+                        <p>Email: <%= body.email %>
+                                <input type="text" name="email" class="form-control">
+
+                        </p>
+
+                    </div>
+
+                </div>
+                <button type="submit" class="btn btn-success rounded-pill">Submit</button>
+                <br>
+                <br>
+                <a href="/route/deleteProfessor/<%= body.id%>" class="btn btn-success rounded-pill">Sterge profesor</a>
+                <br>
+                <br>
+                <a href="/route/db" class="btn btn-success rounded-pill">Inapoi</a>
+                <br>
+                <br>
+                <a href="/route/Logout" class="btn btn-success rounded-pill">Logout</a>
+            </form>
+
+
         </div>
     </div>
 
