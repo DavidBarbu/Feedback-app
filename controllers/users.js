@@ -1,11 +1,66 @@
 const db = require("../models");
 const excelJS = require("exceljs");
 
+// module.exports.pass_crypt = async (req, res) => {
+
+//     //register
+//     const username = req.body.username;
+//     const password = req.body.password;
+
+//     bcrypt.hash(password, saltRounds, (err, hash) => {
+//         if (err) {
+//             console.log(err);
+//         }
+
+//         db.query(
+//             "INSERT INTO users (username, password) VALUES (?,?)",
+//             [username, hash],
+//             (err, result) => {
+//                 console.log(err);
+//             }
+//         );
+//     });
+
+
+//     // //login
+//     // const username = req.body.username;
+//     // const password = req.body.password;
+
+//     // db.query(
+//     //     "SELECT * FROM users WHERE username = ?;",
+//     //     username,
+//     //     (err, result) => {
+//     //         if (err) {
+//     //             res.json({ err: err });
+//     //         }
+
+//     //         if (result.length > 0) {
+//     //             bcrypt.compare(password, result[0].password, (error, response) => {
+//     //                 if (response) {
+
+//     //                     const accessToken = jwt.sign(
+//     //                         { username: result[0].username, id: result[0].id },
+//     //                         "licentaSecret"
+//     //                     );
+//     //                     res.json({ token: accessToken, username: result[0].username, id: result[0].id });
+//     //                 } else {
+//     //                     res.json({ error: "Wrong username/password combination!" });
+//     //                 }
+//     //             });
+//     //         } else {
+//     //             res.json({ error: "User doesn't exist" });
+//     //         }
+//     //     }
+//     // );
+// }
+
 module.exports.getExcel = async (req, res) => {
     const workbook = new excelJS.Workbook();
     const worksheetStudenti = workbook.addWorksheet("Lista Studenti");
     const worksheetProfesori = workbook.addWorksheet("Lista Profesori");
-    const worksheetFeedbacks = workbook.addWorksheet("Lista Feedbacks");
+    const worksheetMaterii = workbook.addWorksheet("Lista Materii");
+    const worksheetIntrebari = workbook.addWorksheet("Lista Intrebari");
+    const worksheetAdmini = workbook.addWorksheet("Lista Admini");
     const path = "./files";
 
     // export studenti
@@ -70,32 +125,86 @@ module.exports.getExcel = async (req, res) => {
         cell.font = { bold: true };
     });
 
-    //export feedbacks
-    let listaFeedbacks = []
-    const feedbacks = await db.Feedback.findAll()
-    for (let i = 0; i < feedbacks.length; i++) {
-        listaFeedbacks.push(feedbacks[i])
+    //export materii
+    let listaMaterii = []
+    const materii = await db.Subject.findAll()
+    for (let i = 0; i < materii.length; i++) {
+        listaMaterii.push(materii[i])
     }
 
-    worksheetFeedbacks.columns = [
+    worksheetMaterii.columns = [
         { header: "ID", key: "id", width: 10 },
-        { header: "ID student", key: "id_student", width: 10 },
-        { header: "ID profesor", key: "id_profesor", width: 10 },
-        { header: "ID intrebare", key: "id_intrebare", width: 10 },
-        { header: "Raspuns", key: "raspuns", width: 10 },
+        { header: "Materie", key: "nume_materie", width: 10 },
+        { header: "Grupa", key: "grupa", width: 10 },
+        { header: "Semestrul", key: "semestru", width: 10 },
+        { header: "Profesor", key: "id_profesor", width: 10 },
         { header: "createdAt", key: "createdAt", width: 10 },
         { header: "updatedAt", key: "updatedAt", width: 10 },
     ];
 
     counter = 1;
 
-    listaFeedbacks.forEach((feedback) => {
-        feedback.id = counter;
-        worksheetFeedbacks.addRow(feedback);
+    listaMaterii.forEach((materie) => {
+        materie.id = counter;
+        worksheetMaterii.addRow(materie);
         counter++;
     });
 
-    worksheetFeedbacks.getRow(1).eachCell((cell) => {
+    worksheetMaterii.getRow(1).eachCell((cell) => {
+        cell.font = { bold: true };
+    });
+
+
+    //export intrebari
+    let listaIntrebari = []
+    const intrebari = await db.Question.findAll()
+    for (let i = 0; i < intrebari.length; i++) {
+        listaIntrebari.push(intrebari[i])
+    }
+
+    worksheetIntrebari.columns = [
+        { header: "ID", key: "id", width: 10 },
+        { header: "Intrebare", key: "intrebare", width: 10 },
+        { header: "createdAt", key: "createdAt", width: 10 },
+        { header: "updatedAt", key: "updatedAt", width: 10 },
+    ];
+
+    counter = 1;
+
+    listaIntrebari.forEach((intrebare) => {
+        intrebare.id = counter;
+        worksheetIntrebari.addRow(intrebare);
+        counter++;
+    });
+
+    worksheetIntrebari.getRow(1).eachCell((cell) => {
+        cell.font = { bold: true };
+    });
+
+    //export admini
+    let listaAdmini = []
+    const admini = await db.Admin.findAll()
+    for (let i = 0; i < admini.length; i++) {
+        listaAdmini.push(admini[i])
+    }
+    worksheetAdmini.columns = [
+        { header: "ID", key: "id", width: 10 },
+        { header: "Email Id", key: "email", width: 10 },
+        { header: "Password", key: "password", width: 10 },
+        { header: "Type", key: "userType", width: 10 },
+        { header: "createdAt", key: "createdAt", width: 10 },
+        { header: "updatedAt", key: "updatedAt", width: 10 },
+    ];
+
+    counter = 1;
+
+    listaAdmini.forEach((admin) => {
+        admin.id = counter;
+        worksheetAdmini.addRow(admin);
+        counter++;
+    });
+
+    worksheetAdmini.getRow(1).eachCell((cell) => {
         cell.font = { bold: true };
     });
 
@@ -179,4 +288,15 @@ module.exports.getFeedback = async (req, res) => {
             message: "Something went wrong",
         });
     }
+}
+
+module.exports.getStudents = (req, res) => {
+
+
+
+
+
+
+
+    res.send("nimic")
 }

@@ -1,13 +1,64 @@
 <%- include('header') -%>
-<div class="text-center center-div mt-5">
-        <h3>Nume: <%= profile.firstName%></h3>
-        <h3>Prenume: <%= profile.lastName%></h3>
-        <h3>Email: <%= profile.email%></h3>
-        <h3>Tip cont: <%= profile.userType%></h3>
-        <a href="/route/dashboard" class="btn btn-success rounded-pill">Inapoi</a>
-        <br>
-        <br>
-        <a href="/route/logout" class="btn btn-success rounded-pill">Logout</a>
-</div>
+        <div class="text-center center-div mt-5">
+                <div class="container border py-5 mt-5">
+                        <h3>Nume: <%= profile.firstName%>
+                        </h3>
+                        <h3>Prenume: <%= profile.lastName%>
+                        </h3>
+                        <h3>Email: <%= profile.email%>
+                        </h3>
+                        <h3>Tip cont: <%= profile.userType%>
+                        </h3>
+                        <a href="/route/dashboard" class="btn btn-success rounded-pill">Inapoi</a>
+                        <br>
+                        <br>
+                        <a href="/route/logout" class="btn btn-success rounded-pill">Logout</a>
+                        <div class="container  py-5 mt-5">
+                                <h4>Schimbare parola</h4>
+                                <div class="form-group">
 
-<%- include('footer') -%>
+                                        <br>
+                                        <div>
+                                                Parola veche:
+                                                <input id="parolaVeche" type="password" placeholder="Parola veche"><br>
+                                                Parola noua:
+                                                <input id="parolaNoua1" type="password" placeholder="Parola noua"><br>
+                                                Parola noua:
+                                                <input id="parolaNoua2" type="password" placeholder="Parola noua"><br>
+                                                <br>
+                                        </div>
+
+                                </div>
+                                <button id="get" class="btn btn-success rounded-pill">Schimba parola</button>
+                        </div>
+                </div>
+
+
+        </div>
+        <script>
+                const getBtn = document.getElementById("get");
+                const baseUrl = 'http://localhost:3000/route/modificareParola'
+                getBtn.addEventListener("click", getInfo)
+
+                async function getInfo(e) {
+                        e.preventDefault();
+                        var parolaVeche = document.getElementById("parolaVeche");
+                        var parolaNoua1 = document.getElementById("parolaNoua1");
+                        var parolaNoua2 = document.getElementById("parolaNoua2");
+                        const inputs = { parolaVeche: parolaVeche.value, parolaNoua1: parolaNoua1.value, parolaNoua2: parolaNoua2.value }
+                        console.log(inputs);
+
+                        const res = await fetch(baseUrl,
+                                {
+                                        method: 'POST',
+                                        headers: {
+                                                'Content-Type': 'application/json',
+                                        },
+                                        body: JSON.stringify(inputs)
+                                })
+                        window.location.href = 'http://localhost:3000/route/myProfessorProfile'
+                }
+
+        </script>
+
+        <%- include('footer') -%>

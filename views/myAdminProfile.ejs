@@ -7,17 +7,12 @@
                         </h3>
                         <h3>Email: <%= profile.email%>
                         </h3>
-                        <h3>An studiu: <%= profile.year%>
-                        </h3>
-                        <h3>Grupa: <%= profile.class%>
-                        </h3>
                         <h3>Tip cont: <%= profile.userType%>
                         </h3>
                         <a href="/route/dashboard" class="btn btn-success rounded-pill">Inapoi</a>
                         <br>
                         <br>
                         <a href="/route/logout" class="btn btn-success rounded-pill">Logout</a>
-
                         <div class="container  py-5 mt-5">
                                 <h4>Schimbare parola</h4>
                                 <div class="form-group">
@@ -37,6 +32,7 @@
                                 <button id="get" class="btn btn-success rounded-pill">Schimba parola</button>
                         </div>
                 </div>
+
 
         </div>
         <script>
@@ -60,7 +56,7 @@
                                         },
                                         body: JSON.stringify(inputs)
                                 })
-                        window.location.href = 'http://localhost:3000/route/myStudentProfile'
+                        window.location.href = 'http://localhost:3000/route/myAdminProfile'
                 }
 
         </script>

@@ -1,6 +1,7 @@
 var express = require("express");
+const xlsx = require('xlsx');
 var router = express.Router();
-const { getExcel, getFeedback,
+const { getExcel, getFeedback, getStudents,
     // getAllCourses, getCourseById,
     // getAllStudents, getStudentById, createStudent, updateStudent, deleteStudent,
     // getAllProfessors, getProfessorById, createProfessor, updateProfessor, deleteProfessor,
@@ -13,6 +14,243 @@ const { SECRET_KEY } = require("./config/jwt");
 const bodyparser = require("body-parser");
 const { localStorage } = require('node-localstorage')
 var cookieParser = require('cookie-parser');
+const workbookStudenti = xlsx.readFile('./files/Studenti.xlsx');
+const workbookProfesori = xlsx.readFile('./files/Profesori.xlsx');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
+
+
+//modificare parola
+router.post('/modificareParola', authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    //console.log("userType: " , userType)
+    if (userType === 'student') {
+        const profile = await db.Student.findByPk(req.body.userId)
+        if (profile.password == req.body.parolaVeche) {
+            if (req.body.parolaNoua1 == req.body.parolaNoua2) {
+                bcrypt.hash(req.body.parolaNoua1, saltRounds, (err, hash) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    console.log("hash: ", hash)
+                    db.Student.update({ password: hash }, { where: { id: req.body.userId } });
+                    console.log("Successfully!")
+                })
+            } else
+                console.log("Parolele noi nu coincid!")
+        } else bcrypt.compare(req.body.parolaVeche, profile.password, (error, response) => {
+            if (response) {
+                if (req.body.parolaNoua1 == req.body.parolaNoua2) {
+                    bcrypt.hash(req.body.parolaNoua1, saltRounds, (err, hash) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                        console.log("hash: ", hash)
+                        db.Student.update({ password: hash }, { where: { id: req.body.userId } });
+                        console.log("Successfully!")
+                    })
+                } else
+                    console.log("Parolele noi nu coincid!")
+            }
+            else console.log("Parola veche nu este buna!")
+        })
+
+    } else if (userType === 'profesor') {
+        const profile = await db.Professor.findByPk(req.body.userId)
+        if (profile.password == req.body.parolaVeche) {
+            if (req.body.parolaNoua1 == req.body.parolaNoua2) {
+                bcrypt.hash(req.body.parolaNoua1, saltRounds, (err, hash) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    console.log("hash: ", hash)
+                    db.Professor.update({ password: hash }, { where: { id: req.body.userId } });
+                    console.log("Successfully!")
+                })
+            } else
+                console.log("Parolele noi nu coincid!")
+        } else bcrypt.compare(req.body.parolaVeche, profile.password, (error, response) => {
+            if (response) {
+                if (req.body.parolaNoua1 == req.body.parolaNoua2) {
+                    bcrypt.hash(req.body.parolaNoua1, saltRounds, (err, hash) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                        console.log("hash: ", hash)
+                        db.Professor.update({ password: hash }, { where: { id: req.body.userId } });
+                        console.log("Successfully!")
+                    })
+                } else
+                    console.log("Parolele noi nu coincid!")
+            }
+            else console.log("Parola veche nu este buna!")
+        })
+    }else if (userType === 'admin') {
+        const profile = await db.Admin.findByPk(req.body.userId)
+        if (profile.password == req.body.parolaVeche) {
+            if (req.body.parolaNoua1 == req.body.parolaNoua2) {
+                bcrypt.hash(req.body.parolaNoua1, saltRounds, (err, hash) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    console.log("hash: ", hash)
+                    db.Admin.update({ password: hash }, { where: { id: req.body.userId } });
+                    console.log("Successfully!")
+                })
+            } else
+                console.log("Parolele noi nu coincid!")
+        } else bcrypt.compare(req.body.parolaVeche, profile.password, (error, response) => {
+            if (response) {
+                if (req.body.parolaNoua1 == req.body.parolaNoua2) {
+                    bcrypt.hash(req.body.parolaNoua1, saltRounds, (err, hash) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                        console.log("hash: ", hash)
+                        db.Admin.update({ password: hash }, { where: { id: req.body.userId } });
+                        console.log("Successfully!")
+                    })
+                } else
+                    console.log("Parolele noi nu coincid!")
+            }
+            else console.log("Parola veche nu este buna!")
+        })
+    }else if (userType === 'conducere') {
+        const profile = await db.Admin.findByPk(req.body.userId)
+        if (profile.password == req.body.parolaVeche) {
+            if (req.body.parolaNoua1 == req.body.parolaNoua2) {
+                bcrypt.hash(req.body.parolaNoua1, saltRounds, (err, hash) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    console.log("hash: ", hash)
+                    db.Admin.update({ password: hash }, { where: { id: req.body.userId } });
+                    console.log("Successfully!")
+                })
+            } else
+                console.log("Parolele noi nu coincid!")
+        } else bcrypt.compare(req.body.parolaVeche, profile.password, (error, response) => {
+            if (response) {
+                if (req.body.parolaNoua1 == req.body.parolaNoua2) {
+                    bcrypt.hash(req.body.parolaNoua1, saltRounds, (err, hash) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                        console.log("hash: ", hash)
+                        db.Admin.update({ password: hash }, { where: { id: req.body.userId } });
+                        console.log("Successfully!")
+                    })
+                } else
+                    console.log("Parolele noi nu coincid!")
+            }
+            else console.log("Parola veche nu este buna!")
+        })
+    } 
+})
+
+//import profesori
+router.get('/importProfesori', authorizationMiddleware, async (req, res) => {
+    const worksheet = workbookProfesori.Sheets[workbookProfesori.SheetNames[0]];
+    try {
+        let posts = [];
+        let post = {};
+
+        for (let cell in worksheet) {
+            const cellAsString = cell.toString();
+
+            if (cellAsString[1] !== 'r' && cellAsString[1] !== 'm' && cellAsString[1] > 1) {
+                if (cellAsString[0] === 'A') {
+                    post.id = worksheet[cell].v;
+                }
+                if (cellAsString[0] === 'B') {
+                    post.firstName = worksheet[cell].v;
+                }
+                if (cellAsString[0] === 'C') {
+                    post.lastName = worksheet[cell].v;
+                }
+                if (cellAsString[0] === 'D') {
+                    post.email = worksheet[cell].v;
+                }
+                if (cellAsString[0] === 'E') {
+                    post.password = worksheet[cell].v;
+                }
+                if (cellAsString[0] === 'F') {
+                    post.userType = worksheet[cell].v;
+                    posts.push(post);
+                    post = {};
+                }
+            }
+        }
+        console.log("length: " + posts.length)
+        for (var i = 0; i < posts.length; i++) {
+            //console.log(posts[i].email)
+            console.log("insert:", posts[i].id, posts[i].firstName,
+                posts[i].lastName, posts[i].email, posts[i].password,
+                posts[i].userType)
+            await db.Professor.create({
+                id: posts[i].id, firstName: posts[i].firstName,
+                lastName: posts[i].lastName, email: posts[i].email, password: posts[i].password,
+                userType: posts[i].userType
+            })
+        }
+
+        res.json(posts)
+    } catch (e) {
+        res.send(e)
+    }
+})
+
+//import studenti
+router.get('/importStudenti', authorizationMiddleware, async (req, res) => {
+    const worksheet = workbookStudenti.Sheets[workbookStudenti.SheetNames[0]];
+
+    let posts = [];
+    let post = {};
+
+    for (let cell in worksheet) {
+        const cellAsString = cell.toString();
+
+        if (cellAsString[1] !== 'r' && cellAsString[1] !== 'm' && cellAsString[1] > 1) {
+            if (cellAsString[0] === 'A') {
+                post.id = worksheet[cell].v;
+            }
+            if (cellAsString[0] === 'B') {
+                post.firstName = worksheet[cell].v;
+            }
+            if (cellAsString[0] === 'C') {
+                post.lastName = worksheet[cell].v;
+            }
+            if (cellAsString[0] === 'D') {
+                post.email = worksheet[cell].v;
+            }
+            if (cellAsString[0] === 'E') {
+                post.password = worksheet[cell].v;
+            }
+            if (cellAsString[0] === 'F') {
+                post.userType = worksheet[cell].v;
+            }
+            if (cellAsString[0] === 'G') {
+                post.class = worksheet[cell].v;
+            }
+            if (cellAsString[0] === 'H') {
+                post.year = worksheet[cell].v;
+                posts.push(post);
+                post = {};
+            }
+        }
+    }
+    console.log("length: " + posts.length)
+    for (var i = 0; i < posts.length; i++) {
+        //console.log(posts[i].email)
+        await db.Student.create({
+            id: posts[i].id, firstName: posts[i].firstName,
+            lastName: posts[i].lastName, email: posts[i].email, password: posts[i].password,
+            userType: posts[i].userType, class: posts[i].class, year: posts[i].year,
+        })
+    }
+    res.json(posts)
+})
 
 //export excel
 router.get('/export', authorizationMiddleware, getExcel)
@@ -47,9 +285,20 @@ router.post('/verify', async (req, res) => {
                         })
                         .status(200)
                         .json({ message: "Logged in successfully 😊 👌" });
-                } else {
-                    res.json("Nu s bune")
-                }
+                } else bcrypt.compare(password.toString(), rez[0].password.toString(), (error, response) => {
+                    if (response) {
+                        const token = jwt.sign({ id, userType }, SECRET_KEY);
+                        res
+                        .cookie("access_token", token, {
+                            httpOnly: true,
+                            secure: process.env.NODE_ENV === "production",
+                        })
+                        .status(200)
+                        .json({ message: "Logged in successfully 😊 👌" });
+                    } else {
+                        res.json("Nu s bune")
+                    }
+                })
             } catch (e) {
                 console.error(e)
             }
@@ -66,9 +315,20 @@ router.post('/verify', async (req, res) => {
                         })
                         .status(200)
                         .json({ message: "Logged in successfully 😊 👌" });
-                } else {
-                    res.json("Nu s bune")
-                }
+                } else bcrypt.compare(password.toString(), rez[0].password.toString(), (error, response) => {
+                    if (response) {
+                        const token = jwt.sign({ id, userType }, SECRET_KEY);
+                        res
+                        .cookie("access_token", token, {
+                            httpOnly: true,
+                            secure: process.env.NODE_ENV === "production",
+                        })
+                        .status(200)
+                        .json({ message: "Logged in successfully 😊 👌" });
+                    } else {
+                        res.json("Nu s bune")
+                    }
+                })
             } catch (e) {
                 console.error(e)
             }
@@ -86,21 +346,26 @@ router.post('/verify', async (req, res) => {
                     })
                     .status(200)
                     .json({ message: "Logged in successfully 😊 👌" });
-            } else {
-                res.json("Nu s bune")
-            }
+            } else bcrypt.compare(password.toString(), rez[0].password.toString(), (error, response) => {
+                if (response) {
+                    const token = jwt.sign({ id, userType }, SECRET_KEY);
+                    res
+                    .cookie("access_token", token, {
+                        httpOnly: true,
+                        secure: process.env.NODE_ENV === "production",
+                    })
+                    .status(200)
+                    .json({ message: "Logged in successfully 😊 👌" });
+                } else {
+                    res.json("Nu s bune")
+                }
+            })
         } catch (e) {
             console.error(e)
         }
     }
 });
 
-// route for login
-// router.get('/login', (req, res) => {
-//     res.render('login')
-// })
-
-// route for dashboard
 router.get('/dashboard', authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
     let student = await db.Student.findByPk(req.body.userId);
@@ -132,7 +397,6 @@ router.get('/db', authorizationMiddleware, async (req, res) => {
 
 // route for logout
 router.get('/logout', (req, res) => {
-    //queryInterface.removeColumn('Questions','da')
     return res
         .clearCookie("access_token")
         .status(200)
@@ -167,6 +431,17 @@ router.get('/myProfessorProfile', authorizationMiddleware, async (req, res) => {
         res.send("Nu sunteti profesor!");
     }
 })
+//admin profile
+router.get('/myAdminProfile', authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    if (userType === "admin" || userType === "conducere") {
+        profile = await db.Admin.findByPk(req.body.userId)
+        res.render('myAdminProfile', { profile })
+    }
+    else {
+        res.send("Nu sunteti admin!");
+    }
+})
 
 router.get('/allFeedbacks', authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
@@ -199,14 +474,6 @@ router.get('/professorFeedbacks', authorizationMiddleware, async (req, res) => {
 router.get("/cursuri", authorizationMiddleware => {
     res.render('login', { title: "Express", logout: "logout Successfully...!" })
 })
-// router.get("/curs/:id", getCourseById);
-
-//studenti @s.unibuc.ro
-// router.get("/studenti", getAllStudents);
-// router.get("/student/:id", getStudentById);
-// router.post("/studenti", createStudent);
-// router.put("/student/:id", updateStudent);
-// router.delete("/student/:id", deleteStudent);
 
 //profesori @unibuc.ro
 router.get("/profesori/:id/:materie", authorizationMiddleware, async (req, res) => {
@@ -214,22 +481,22 @@ router.get("/profesori/:id/:materie", authorizationMiddleware, async (req, res) 
     let grupa = req.params.id
     let materie = req.params.materie
     if (userType === "student") {
-        try{
-        let profi = []
-        let profesori = await db.Professor.findAll()
-        for (let i = 0; i < profesori.length; i++) {
-            //console.log(profesori[i]['dataValues']['materie_predata'], materie )
-            if (profesori[i]['dataValues']['materie_predata'] == materie) {
-                console.log("aici unul:", profesori[i]['dataValues']['materie_predata'])
-                profi.push(profesori[i]['dataValues']['id'])
+        try {
+            let profi = []
+            let profesori = await db.Professor.findAll()
+            for (let i = 0; i < profesori.length; i++) {
+                //console.log(profesori[i]['dataValues']['materie_predata'], materie )
+                if (profesori[i]['dataValues']['materie_predata'] == materie) {
+                    console.log("aici unul:", profesori[i]['dataValues']['materie_predata'])
+                    profi.push(profesori[i]['dataValues']['id'])
+                }
             }
+            console.log("profi:", profi, "materie: ", materie)
+            res.render('profesori', { profi: profi, profesori: profesori, materie: materie });
+        } catch (e) {
+            res.send(e);
         }
-        console.log("profi:", profi, "materie: ", materie)
-        res.render('profesori', { profi: profi, profesori: profesori, materie: materie });
-    }catch(e){
-        res.send(e);
     }
-}
     else {
         res.send("<h1>Nu sunteti student!</h1>");
     }
@@ -285,6 +552,7 @@ router.get("/deleteStudent/:id", authorizationMiddleware, async (req, res) => {
     } else res.send("<h1>Nu aveti acces!!</h1>");
 
 })
+
 router.get("/editProfessor/:id", authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
     const professorId = req.params.id;
@@ -294,8 +562,6 @@ router.get("/editProfessor/:id", authorizationMiddleware, async (req, res) => {
     } else res.send("<h1>Nu aveti acces!!</h1>");
 
 })
-
-
 
 router.get("/deleteProfessor/:id", authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
