@@ -3,10 +3,9 @@ const path = require('path');
 const bodyparser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
-const { v4: uuidv4 } = require("uuid");
 const jwt = require('jsonwebtoken');
 
-const router = require('./router');
+const router = require('./routes/router.js');
 
 const app = express();
 
@@ -24,7 +23,7 @@ app.use('/route', router);
 
 // home route
 app.get('/', (req, res) =>{
-    res.render('login', { title : "Login System"});
+    res.render('login');
 })
 
 app.listen(port, ()=>

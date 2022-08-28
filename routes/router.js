@@ -1,14 +1,13 @@
 var express = require("express");
-const xlsx = require('xlsx');
 var router = express.Router();
-const { getExcel, getFeedback, getStudents } = require('./controllers/users');
-const { sequelize } = require("./models");
-const db = require("./models");
-const authorizationMiddleware = require("./middleware/authorization")
+const xlsx = require('xlsx');
+const { getExcel, getFeedback } = require('../controllers/users');
+const { sequelize } = require("../models");
+const db = require("../models");
+const authorizationMiddleware = require("../middleware/authorization")
 const jwt = require('jsonwebtoken');
-const { SECRET_KEY } = require("./config/jwt");
+const { SECRET_KEY } = require("../config/jwt");
 const bodyparser = require("body-parser");
-const { localStorage } = require('node-localstorage')
 var cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -117,9 +116,9 @@ router.get('/importStudenti', async (req, res) => {
 })
 
 //export excel
-
 router.get('/export', authorizationMiddleware, getExcel)
 
+//export feedback
 router.get('/feedback', authorizationMiddleware, getFeedback)
 
 // verify user
@@ -500,6 +499,8 @@ router.get('/statistici', authorizationMiddleware, async (req, res) => {
                 notaMicaFinala = nota
                 id_ceaMaiMicaNota = idProfesoriEvaluati[i]
             }
+            nrrEvaluari=0
+            sumEvaluari=0
         }
         const procentProfesoriEvaluati = idProfesoriEvaluati.length / allProfessors.length * 100
         const procentStudentiEvaluatori = idStudentiEvaluatori.length / allStudents.length * 100
