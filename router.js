@@ -1,11 +1,7 @@
 var express = require("express");
 const xlsx = require('xlsx');
 var router = express.Router();
-const { getExcel, getFeedback, getStudents,
-    // getAllCourses, getCourseById,
-    // getAllStudents, getStudentById, createStudent, updateStudent, deleteStudent,
-    // getAllProfessors, getProfessorById, createProfessor, updateProfessor, deleteProfessor,
-} = require('./controllers/users');
+const { getExcel, getFeedback, getStudents } = require('./controllers/users');
 const { sequelize } = require("./models");
 const db = require("./models");
 const authorizationMiddleware = require("./middleware/authorization")
@@ -26,17 +22,15 @@ router.get('/importProfesori', async (req, res) => {
             var worksheet = workbook.getWorksheet('Lista Profesori')
             worksheet.eachRow({ includeEmpty: false }, async function (row, rowNumber) {
                 try {
-                    //console.log(parseInt(row.values[1]),String(row.values[2]),String(row.values[3]),String(row.values[4]),String(row.values[5]),String(row.values[6]), new Date(), new Date())
                     await db.Professor.create({ id: parseInt(row.values[1]), firstName: String(row.values[2]), lastName: String(row.values[3]), email: String(row.values[4]), password: String(row.values[5]), userType: String(row.values[6]), createdAt: new Date(), updatedAt: new Date() })
-                } catch (e) { console.log("error", e) }
+                } catch (e) { console.error(e) }
             });
         });
-        setTimeout(async function () {
-            const last = await db.Professor.findAll();
-            const ll = last.length-1
-            console.log(last[ll]['dataValues']['id'])
-            await db.Professor.destroy({ where: { id: last[ll]['dataValues']['id'] } })
-        }, 10000)
+    setTimeout(async function () {
+        const last = await db.Professor.findAll();
+        const ll = last.length - 1
+        await db.Professor.destroy({ where: { id: last[ll]['dataValues']['id'] } })
+    }, 10000)
     res.send("Gata frt")
 })
 
@@ -48,17 +42,16 @@ router.get('/importAdmini', async (req, res) => {
             var worksheet = workbook.getWorksheet('Lista Admini')
             worksheet.eachRow({ includeEmpty: false }, async function (row, rowNumber) {
                 try {
-                    //console.log(parseInt(row.values[1]),String(row.values[2]),String(row.values[3]),String(row.values[4]),String(row.values[5]),String(row.values[6]), new Date(), new Date())
                     await db.Admin.create({ id: parseInt(row.values[1]), email: String(row.values[2]), password: String(row.values[3]), userType: String(row.values[4]), createdAt: new Date(), updatedAt: new Date() })
-                } catch (e) { console.log("error", e) }
+                } catch (e) { console.error(e) }
             });
         });
-        setTimeout(async function () {
-            const last = await db.Admin.findAll();
-            const ll = last.length-1
-            await db.Admin.destroy({ where: { id: last[ll]['dataValues']['id'] } })
-        }, 10000)
-        
+    setTimeout(async function () {
+        const last = await db.Admin.findAll();
+        const ll = last.length - 1
+        await db.Admin.destroy({ where: { id: last[ll]['dataValues']['id'] } })
+    }, 10000)
+
     res.send("Gata frt")
 })
 
@@ -70,16 +63,15 @@ router.get('/importPlan', async (req, res) => {
             var worksheet = workbook.getWorksheet('Lista Materii')
             worksheet.eachRow({ includeEmpty: false }, async function (row, rowNumber) {
                 try {
-                    //console.log(parseInt(row.values[1]),String(row.values[2]),String(row.values[3]),String(row.values[4]),String(row.values[5]),String(row.values[6]), new Date(), new Date())
                     await db.Subject.create({ id: parseInt(row.values[1]), nume_materie: String(row.values[2]), grupa: parseInt(row.values[3]), semestru: parseInt(row.values[4]), id_profesor: parseInt(row.values[5]), createdAt: new Date(), updatedAt: new Date() })
-                } catch (e) { console.log("error", e) }
+                } catch (e) { console.error(e) }
             });
         });
-        setTimeout(async function () {
-            const last = await db.Subject.findAll();
-            const ll = last.length-1
-            await db.Subject.destroy({ where: { id: last[ll]['dataValues']['id'] } })
-        }, 10000)
+    setTimeout(async function () {
+        const last = await db.Subject.findAll();
+        const ll = last.length - 1
+        await db.Subject.destroy({ where: { id: last[ll]['dataValues']['id'] } })
+    }, 10000)
     res.send("Gata frt")
 })
 
@@ -91,16 +83,15 @@ router.get('/importIntrebari', async (req, res) => {
             var worksheet = workbook.getWorksheet('Lista Intrebari')
             worksheet.eachRow({ includeEmpty: false }, async function (row, rowNumber) {
                 try {
-                    //console.log(parseInt(row.values[1]),String(row.values[2]),String(row.values[3]),String(row.values[4]),String(row.values[5]),String(row.values[6]), new Date(), new Date())
                     await db.Question.create({ id: parseInt(row.values[1]), intrebare: String(row.values[2]), createdAt: new Date(), updatedAt: new Date() })
-                } catch (e) { console.log("error", e) }
+                } catch (e) { console.error(e) }
             });
         });
-        setTimeout(async function () {
-            const last = await db.Question.findAll();
-            const ll = last.length-1
-            await db.Question.destroy({ where: { id: last[ll]['dataValues']['id'] } })
-        }, 10000)
+    setTimeout(async function () {
+        const last = await db.Question.findAll();
+        const ll = last.length - 1
+        await db.Question.destroy({ where: { id: last[ll]['dataValues']['id'] } })
+    }, 10000)
     res.send("Gata frt")
 })
 
@@ -114,66 +105,16 @@ router.get('/importStudenti', async (req, res) => {
             worksheet.eachRow({ includeEmpty: false }, async function (row, rowNumber) {
                 try {
                     await db.Student.create({ id: parseInt(row.values[1]), firstName: String(row.values[2]), lastName: String(row.values[3]), email: String(row.values[4]), password: String(row.values[5]), userType: String(row.values[6]), class: parseInt(row.values[7]), year: parseInt(row.values[8]), createdAt: new Date(), updatedAt: new Date() })
-                } catch (e) { console.log("error", e) }
+                } catch (e) { console.error(e) }
             });
         });
-        setTimeout(async function () {
-            const last = await db.Student.findAll();
-            const ll = last.length-1
-            await db.Student.destroy({ where: { id: last[ll]['dataValues']['id'] } })
-        }, 10000)
+    setTimeout(async function () {
+        const last = await db.Student.findAll();
+        const ll = last.length - 1
+        await db.Student.destroy({ where: { id: last[ll]['dataValues']['id'] } })
+    }, 10000)
     res.send("Da frate")
 })
-
-// router.get('/importStudenti', async (req, res) => {
-//     const worksheet = workbookStudenti.Sheets[workbookStudenti.SheetNames[0]];
-//     let posts = [];
-//     let post = {};
-
-//     for (let cell in worksheet) {
-//         const cellAsString = cell.toString();
-
-//         if (cellAsString[1] !== 'r' && cellAsString[1] !== 'm' && cellAsString[1] > 1) {
-//             if (cellAsString[0] === 'A') {
-//                 post.id = worksheet[cell].v;
-//             }
-//             if (cellAsString[0] === 'B') {
-//                 post.firstName = worksheet[cell].v;
-//             }
-//             if (cellAsString[0] === 'C') {
-//                 post.lastName = worksheet[cell].v;
-//             }
-//             if (cellAsString[0] === 'D') {
-//                 post.email = worksheet[cell].v;
-//             }
-//             if (cellAsString[0] === 'E') {
-//                 post.password = worksheet[cell].v;
-//             }
-//             if (cellAsString[0] === 'F') {
-//                 post.userType = worksheet[cell].v;
-//             }
-//             if (cellAsString[0] === 'G') {
-//                 post.class = worksheet[cell].v;
-//             }
-//             if (cellAsString[0] === 'H') {
-//                 post.year = worksheet[cell].v;
-//                 posts.push(post);
-//                 post = {};
-//             }
-//         }else{console.log("cell:", cellAsString[1])}
-//     }
-//     console.log("length: " + posts.length)
-//     // for (var i = 0; i < posts.length; i++) {
-//     //     //console.log(posts[i].email)
-//     //     await db.Student.create({
-//     //         id: posts[i].id, firstName: posts[i].firstName,
-//     //         lastName: posts[i].lastName, email: posts[i].email, password: posts[i].password,
-//     //         userType: posts[i].userType, class: posts[i].class, year: posts[i].year,
-//     //     })
-//     // }
-//     res.json(posts)
-// })
-
 
 //export excel
 
@@ -187,17 +128,13 @@ router.post('/verify', async (req, res) => {
     const email = body.email;
     const password = body.password;
     let rez = await db.Student.findAll({ where: { email: email, } });
-    console.log(rez)
     if (rez.length === 0) {
         let rez = await db.Professor.findAll({ where: { email: email, } });
-        console.log(rez)
         if (rez.length === 0) {
             let rez = await db.Admin.findAll({ where: { email: email, } });
-            console.log(rez)
             if (rez.length === 0) {
                 res.send("Nu exista un cont cu acest email.")
             }
-            console.log(rez)
             try {
                 const id = rez[0].id.toString()
                 const userType = rez[0].userType.toString()
@@ -294,36 +231,31 @@ router.post('/verify', async (req, res) => {
 //modificare parola
 router.post('/modificareParola', authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
-    //console.log("userType: " , userType)
     if (userType === 'student') {
         const profile = await db.Student.findByPk(req.body.userId)
         if (profile.password == req.body.parolaVeche) {
             if (req.body.parolaNoua1 == req.body.parolaNoua2) {
                 bcrypt.hash(req.body.parolaNoua1, saltRounds, (err, hash) => {
                     if (err) {
-                        console.log(err);
+                        console.error(err);
                     }
-                    console.log("hash: ", hash)
                     db.Student.update({ password: hash }, { where: { id: req.body.userId } });
-                    console.log("Successfully!")
                 })
             } else
-                console.log("Parolele noi nu coincid!")
+                console.error("Parolele noi nu coincid!")
         } else bcrypt.compare(req.body.parolaVeche, profile.password, (error, response) => {
             if (response) {
                 if (req.body.parolaNoua1 == req.body.parolaNoua2) {
                     bcrypt.hash(req.body.parolaNoua1, saltRounds, (err, hash) => {
                         if (err) {
-                            console.log(err);
+                            console.error(err);
                         }
-                        console.log("hash: ", hash)
                         db.Student.update({ password: hash }, { where: { id: req.body.userId } });
-                        console.log("Successfully!")
                     })
                 } else
-                    console.log("Parolele noi nu coincid!")
+                    console.error("Parolele noi nu coincid!")
             }
-            else console.log("Parola veche nu este buna!")
+            else console.error("Parola veche nu este buna!")
         })
 
     } else if (userType === 'profesor') {
@@ -332,29 +264,25 @@ router.post('/modificareParola', authorizationMiddleware, async (req, res) => {
             if (req.body.parolaNoua1 == req.body.parolaNoua2) {
                 bcrypt.hash(req.body.parolaNoua1, saltRounds, (err, hash) => {
                     if (err) {
-                        console.log(err);
+                        console.error(err);
                     }
-                    console.log("hash: ", hash)
                     db.Professor.update({ password: hash }, { where: { id: req.body.userId } });
-                    console.log("Successfully!")
                 })
             } else
-                console.log("Parolele noi nu coincid!")
+                console.error("Parolele noi nu coincid!")
         } else bcrypt.compare(req.body.parolaVeche, profile.password, (error, response) => {
             if (response) {
                 if (req.body.parolaNoua1 == req.body.parolaNoua2) {
                     bcrypt.hash(req.body.parolaNoua1, saltRounds, (err, hash) => {
                         if (err) {
-                            console.log(err);
+                            console.error(err);
                         }
-                        console.log("hash: ", hash)
                         db.Professor.update({ password: hash }, { where: { id: req.body.userId } });
-                        console.log("Successfully!")
                     })
                 } else
-                    console.log("Parolele noi nu coincid!")
+                    console.error("Parolele noi nu coincid!")
             }
-            else console.log("Parola veche nu este buna!")
+            else console.error("Parola veche nu este buna!")
         })
     } else if (userType === 'admin') {
         const profile = await db.Admin.findByPk(req.body.userId)
@@ -362,29 +290,25 @@ router.post('/modificareParola', authorizationMiddleware, async (req, res) => {
             if (req.body.parolaNoua1 == req.body.parolaNoua2) {
                 bcrypt.hash(req.body.parolaNoua1, saltRounds, (err, hash) => {
                     if (err) {
-                        console.log(err);
+                        console.error(err);
                     }
-                    console.log("hash: ", hash)
                     db.Admin.update({ password: hash }, { where: { id: req.body.userId } });
-                    console.log("Successfully!")
                 })
             } else
-                console.log("Parolele noi nu coincid!")
+                console.error("Parolele noi nu coincid!")
         } else bcrypt.compare(req.body.parolaVeche, profile.password, (error, response) => {
             if (response) {
                 if (req.body.parolaNoua1 == req.body.parolaNoua2) {
                     bcrypt.hash(req.body.parolaNoua1, saltRounds, (err, hash) => {
                         if (err) {
-                            console.log(err);
+                            console.error(err);
                         }
-                        console.log("hash: ", hash)
                         db.Admin.update({ password: hash }, { where: { id: req.body.userId } });
-                        console.log("Successfully!")
                     })
                 } else
-                    console.log("Parolele noi nu coincid!")
+                    console.error("Parolele noi nu coincid!")
             }
-            else console.log("Parola veche nu este buna!")
+            else console.error("Parola veche nu este buna!")
         })
     } else if (userType === 'conducere') {
         const profile = await db.Admin.findByPk(req.body.userId)
@@ -392,29 +316,25 @@ router.post('/modificareParola', authorizationMiddleware, async (req, res) => {
             if (req.body.parolaNoua1 == req.body.parolaNoua2) {
                 bcrypt.hash(req.body.parolaNoua1, saltRounds, (err, hash) => {
                     if (err) {
-                        console.log(err);
+                        console.error(err);
                     }
-                    console.log("hash: ", hash)
                     db.Admin.update({ password: hash }, { where: { id: req.body.userId } });
-                    console.log("Successfully!")
                 })
             } else
-                console.log("Parolele noi nu coincid!")
+                console.error("Parolele noi nu coincid!")
         } else bcrypt.compare(req.body.parolaVeche, profile.password, (error, response) => {
             if (response) {
                 if (req.body.parolaNoua1 == req.body.parolaNoua2) {
                     bcrypt.hash(req.body.parolaNoua1, saltRounds, (err, hash) => {
                         if (err) {
-                            console.log(err);
+                            console.error(err);
                         }
-                        console.log("hash: ", hash)
                         db.Admin.update({ password: hash }, { where: { id: req.body.userId } });
-                        console.log("Successfully!")
                     })
                 } else
-                    console.log("Parolele noi nu coincid!")
+                    console.error("Parolele noi nu coincid!")
             }
-            else console.log("Parola veche nu este buna!")
+            else console.error("Parola veche nu este buna!")
         })
     }
 })
@@ -422,16 +342,20 @@ router.post('/modificareParola', authorizationMiddleware, async (req, res) => {
 //route for dashboard
 router.get('/dashboard', authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
-    let student = await db.Student.findByPk(req.body.userId);
-    const professor = await db.Professor.findByPk(req.body.userId);
+
+
     if (userType === "student") {
+        const student = await db.Student.findByPk(req.body.userId);
         res.render("studentDashboard", { body: student })
     } else if (userType === "profesor") {
+        const professor = await db.Professor.findByPk(req.body.userId);
         res.render("professorDashboard", { body: professor })
     } else if (userType === "admin") {
-        res.render("adminDashboard", { body: student })
+        const admin = await db.Admin.findByPk(req.body.userId);
+        res.render("adminDashboard", { body: admin })
     } else if (userType === "conducere") {
-        res.render("conducereDashboard", { body: student })
+        const conducere = await db.Admin.findByPk(req.body.userId);
+        res.render("conducereDashboard", { body: conducere })
     } else { res.send("smth went wrong") }
 })
 
@@ -454,14 +378,8 @@ router.get('/logout', (req, res) => {
     return res
         .clearCookie("access_token")
         .status(200)
-        .render('login', { logout: "Iesi acas' " })
+        .render('login', { txt: "V-ati deconectat cu succes!" })
 });
-
-// route for questionnaire
-router.get('/chestionar', authorizationMiddleware, async (req, res) => {
-    let rez = await db.Professor.findAll();
-    res.send(rez)
-})
 
 //student profile
 router.get('/myStudentProfile', authorizationMiddleware, async (req, res) => {
@@ -498,14 +416,105 @@ router.get('/myAdminProfile', authorizationMiddleware, async (req, res) => {
     }
 })
 
+//all feedbacks
 router.get('/allFeedbacks', authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
     if (userType === "admin" || userType === "conducere") {
         allFeedbacks = await db.Feedback.findAll()
-        allStudents = await db.Student.findAll()
         allProfessors = await db.Professor.findAll()
         allQuestions = await db.Question.findAll()
-        res.render('allFeedbacks', { allFeedbacks, allStudents, allProfessors, allQuestions })
+        res.render('allFeedbacks', { allFeedbacks, allProfessors, allQuestions })
+    }
+    else {
+        res.send("Nu sunteti admin!");
+    }
+})
+
+// //statistici
+router.get('/statistici', authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    if (userType === "admin" || userType === "conducere") {
+        allFeedbacks = await db.Feedback.findAll()
+        allProfessors = await db.Professor.findAll()
+        allStudents = await db.Student.findAll()
+
+        //profesori evaluati
+        let idProfesoriEvaluati = []
+        let idProfesoriEvaluati_ = []
+        for (let i = 0; i < allFeedbacks.length; i++) {
+            idProfesoriEvaluati_.push(allFeedbacks[i]['dataValues']['id_profesor'])
+            if (!idProfesoriEvaluati.includes(allFeedbacks[i]['dataValues']['id_profesor']))
+                idProfesoriEvaluati.push(allFeedbacks[i]['dataValues']['id_profesor'])
+        }
+
+        //studenti evaluatori
+        let idStudentiEvaluatori = []
+        let idStudentiEvaluatori_ = []
+        for (let i = 0; i < allFeedbacks.length; i++) {
+            idStudentiEvaluatori_.push(allFeedbacks[i]['dataValues']['id_student'])
+            if (!idStudentiEvaluatori.includes(allFeedbacks[i]['dataValues']['id_student']))
+                idStudentiEvaluatori.push(allFeedbacks[i]['dataValues']['id_student'])
+        }
+
+        let id_celeMaiMulteEvaluari = -1
+        let nrEvaluari = 0
+        if (idProfesoriEvaluati.length > 0) {
+            let contor = 0
+            id_celeMaiMulteEvaluari = idProfesoriEvaluati[0]
+
+            for (let i = 0; i < idProfesoriEvaluati.length; i++) {
+
+                for (let j = 0; j < idProfesoriEvaluati_.length; j++) {
+                    if (idProfesoriEvaluati_[j] == idProfesoriEvaluati[i])
+                        contor++
+                }
+                if (contor > nrEvaluari) {
+                    nrEvaluari = contor
+                    id_celeMaiMulteEvaluari = idProfesoriEvaluati[i]
+                }
+                contor = 0
+            }
+        } else { res.send("Nu exista profesori evaluati") }
+
+
+        let nrrEvaluari = 0
+        let sumEvaluari = 0
+        let nota
+        let notaMicaFinala = 11
+        let notaMareFinala = 0
+        let id_ceaMaiMareNota = -1
+        let id_ceaMaiMicaNota = -1
+        for (let i = 0; i < idProfesoriEvaluati.length; i++) {
+            for (let j = 0; j < allFeedbacks.length; j++) {
+                if (allFeedbacks[j]['dataValues']['id_profesor'] == idProfesoriEvaluati[i]) {
+                    nrrEvaluari++
+                    sumEvaluari += parseInt(allFeedbacks[j]['dataValues']['raspuns'])
+                }
+            }
+            nota = sumEvaluari / nrrEvaluari
+            if (notaMareFinala < nota) {
+                notaMareFinala = nota
+                id_ceaMaiMareNota = idProfesoriEvaluati[i]
+            }
+            if (notaMicaFinala > nota) {
+                notaMicaFinala = nota
+                id_ceaMaiMicaNota = idProfesoriEvaluati[i]
+            }
+        }
+        const procentProfesoriEvaluati = idProfesoriEvaluati.length / allProfessors.length * 100
+        const procentStudentiEvaluatori = idStudentiEvaluatori.length / allStudents.length * 100
+        const celMaiEvaluat_Prof = await db.Professor.findByPk(id_celeMaiMulteEvaluari)
+        const ceaMaiMareNota_Prof = await db.Professor.findByPk(id_ceaMaiMareNota)
+        const ceaMaiMicaNota_Prof = await db.Professor.findByPk(id_ceaMaiMicaNota)
+        
+
+        res.render('statisticiEvaluari', {
+            celMaiEvaluat_ProfFirstName: celMaiEvaluat_Prof.firstName, celMaiEvaluat_ProfLastName: celMaiEvaluat_Prof.lastName, nrEvaluari,
+            notaMareFinala, ceaMaiMareNota_ProfFirstName: ceaMaiMareNota_Prof.firstName, ceaMaiMareNota_ProfLastName: ceaMaiMareNota_Prof.lastName,
+            notaMicaFinala, ceaMaiMicaNota_ProfFirstName: ceaMaiMicaNota_Prof.firstName, ceaMaiMicaNota_ProfLastName: ceaMaiMicaNota_Prof.lastName,
+            procentProfesoriEvaluati, idProfesoriEvaluatiLength: idProfesoriEvaluati.length, allProfessorsLength: allProfessors.length,
+            procentStudentiEvaluatori, idStudentiEvaluatoriLength: idStudentiEvaluatori.length, allStudentsLength: allStudents.length
+        })
     }
     else {
         res.send("Nu sunteti admin!");
@@ -526,23 +535,20 @@ router.get('/professorFeedbacks', authorizationMiddleware, async (req, res) => {
 })
 
 //profesori @unibuc.ro
-router.get("/profesori/:id/:materie", authorizationMiddleware, async (req, res) => {
+router.get("/profesori/:materie", authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
-    let grupa = req.params.id
+    let userId = req.body.userId
     let materie = req.params.materie
     if (userType === "student") {
         try {
-            let profi = []
-            let profesori = await db.Professor.findAll()
-            for (let i = 0; i < profesori.length; i++) {
-                //console.log(profesori[i]['dataValues']['materie_predata'], materie )
-                if (profesori[i]['dataValues']['materie_predata'] == materie) {
-                    console.log("aici unul:", profesori[i]['dataValues']['materie_predata'])
-                    profi.push(profesori[i]['dataValues']['id'])
-                }
-            }
-            console.log("profi:", profi, "materie: ", materie)
-            res.render('profesori', { profi: profi, profesori: profesori, materie: materie });
+            let grupaStudent = await db.Student.findByPk(userId)
+            let materii = await db.Subject.findAll({ where: { nume_materie: materie, grupa: grupaStudent.class } })
+            if (materii.length > 0) {
+                let id_profesor = materii[0].id_profesor
+                let profesor = await db.Professor.findByPk(id_profesor)
+                let Q = await db.Question.findAll()
+                res.render('chestionar', { idProfessor: profesor.id, firstNameProfessor: profesor.firstName, lastNameProfessor: profesor.lastName, Q: Q });
+            }else res.send("<h1>Aveti acces doar la cursurile grupei de care apartineti!!</h1>");
         } catch (e) {
             res.send(e);
         }
@@ -557,24 +563,8 @@ router.get("/materii", authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
     if (userType === "student") {
         let student = await db.Student.findByPk(req.body.userId)
-        //console.log("stud:", student['dataValues']['class']);
         let materii = await db.Subject.findAll({ where: { grupa: student['dataValues']['class'], } });
-        console.log("materii:", materii)
-        let materii_grupa = []
-        for (let i = 0; i < materii.length; i++) {
-            let k = 1
-            for (let j = 0; j < materii_grupa.length; j++) {
-                console.log(materii[i]['dataValues']['grupa'], materii_grupa[j])
-                if (materii[i]['dataValues']['nume_materie'] == materii_grupa[j]) {
-                    console.log("sunt egale")
-                    k = 0
-                }
-            }
-            if (k == 1)
-                materii_grupa.push(materii[i]['dataValues']['nume_materie'])
-        }
-        console.log(materii_grupa)
-        res.render('materii', { materii: materii, materii_grupa: materii_grupa, student: student });
+        res.render('materii', { materii: materii, student: student });
     }
     else {
         res.send("<h1>Nu sunteti student!</h1>");
@@ -673,7 +663,6 @@ router.get("/chestionar/:id", authorizationMiddleware, async (req, res) => {
     const professorId = req.params.id;
     let userType = req.body.userType
     if (userType === "student") {
-        console.log("aci:", rez[0].intrebare)
         const professor = await db.Professor.findByPk(professorId);
         res.render("chestionar", { idProfessor: professor.id, firstNameProfessor: professor.firstName, lastNameProfessor: professor.lastName, Q: rez });
     } else if (userType === "profesor") {
@@ -708,7 +697,7 @@ router.post("/delete_question", authorizationMiddleware, async (req, res) => {
                 const feedback = await db.Feedback.destroy({ where: { id_intrebare: qs[i] } })
             }
         } catch (error) {
-            console.log('Error on updating user: ', error);
+            console.error('Error on updating user: ', error);
         }
 
     } else res.send("<h1>Nu aveti acces!!</h1>");
@@ -719,19 +708,16 @@ router.post("/questions", authorizationMiddleware, async (req, res) => {
     if (userType === "conducere") {
         try {
             await db.Question.create({ intrebare: req.body.inputu })
-            console.log("INPUTU:", req.body.inputu)
             const feedbacks = await db.Feedback.findAll()
             const id_intrebare_adaugata = await db.Question.findOne({ where: { intrebare: req.body.inputu } })
-            console.log("id adaugata:", id_intrebare_adaugata['dataValues']['id'])
             const id_intrebare = feedbacks[0]['dataValues']['id_intrebare']
             const fb = await db.Feedback.findAll({ where: { id_intrebare: id_intrebare, } })
             for (let i = 0; i < feedbacks.length; i++) {
-                console.log("fb:", fb[i]['dataValues']['id_student'], fb[i]['dataValues']['id_profesor'])
                 await db.Feedback.create({ id_student: fb[i]['dataValues']['id_student'], id_profesor: fb[i]['dataValues']['id_profesor'], id_intrebare: id_intrebare_adaugata['dataValues']['id'] })
             }
 
         } catch (error) {
-            console.log('Error on updating user: ', error);
+            console.error('Error on updating user: ', error);
         }
         const questions = await db.Question.findAll()
         res.send({ questions })
@@ -742,15 +728,12 @@ router.post("/chestionar/:id", authorizationMiddleware, async (req, res) => {
     const professorId = req.params.id;
     let userType = req.body.userType
     const DB = await db.Question.findAll()
-    console.log("DB: ", DB.length)
     if (userType === "student") {
         try {
             let rez = null;
             for (let i = 0; i < req.body.inputu.length; i++) {
-                console.log("INPUTU: ", req.body.inputu[i])
                 rez = null;
                 q = await db.Question.findAll()
-                console.log("q aici: ", q[i]['dataValues']['id'])
                 rez = await db.Feedback.findOne({
                     where: {
                         id_student: req.body.userId,
@@ -760,7 +743,6 @@ router.post("/chestionar/:id", authorizationMiddleware, async (req, res) => {
                 })
 
                 if (rez) {
-                    console.log("rez: ", rez)
                     await db.Feedback.update(
                         {
                             raspuns: req.body.inputu[i],
@@ -783,26 +765,21 @@ router.post("/chestionar/:id", authorizationMiddleware, async (req, res) => {
                 }
             }
         } catch (error) {
-            console.log('Error on updating user: ', error);
+            console.error('Error on updating user: ', error);
         }
         let student = await db.Student.findByPk(req.body.userId)
-        //console.log("stud:", student['dataValues']['class']);
         let materii = await db.Subject.findAll({ where: { grupa: student['dataValues']['class'], } });
-        console.log("materii:", materii)
         let materii_grupa = []
         for (let i = 0; i < materii.length; i++) {
             let k = 1
             for (let j = 0; j < materii_grupa.length; j++) {
-                console.log(materii[i]['dataValues']['grupa'], materii_grupa[j])
                 if (materii[i]['dataValues']['nume_materie'] == materii_grupa[j]) {
-                    console.log("sunt egale")
                     k = 0
                 }
             }
             if (k == 1)
                 materii_grupa.push(materii[i]['dataValues']['nume_materie'])
         }
-        console.log(materii_grupa)
         res.render('materii', { materii: materii, materii_grupa: materii_grupa, student: student });
     } else if (userType === "profesor") {
         res.send("<h1>Nu sunteti student!</h1>");

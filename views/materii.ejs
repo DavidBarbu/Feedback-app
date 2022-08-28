@@ -6,10 +6,10 @@
                         optiuni:</h3>
 
             <div>
-                <% for( var i=0; i < materii_grupa.length; i++) { %>
+                <% for( var i=0; i < materii.length; i++) { %>
                     <p>
-                        <a href="/route/profesori/<%= student.class%>/<%= materii_grupa[i]%>">
-                                <%= materii_grupa[i]%></a>
+                        <a href="/route/profesori/<%= materii[i]['dataValues']['nume_materie']%>">
+                                <%= materii[i]['dataValues']['nume_materie']%></a>
                     </p>
                     <% } %>
             </div>

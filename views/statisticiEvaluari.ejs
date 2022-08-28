@@ -1,0 +1,25 @@
+<%- include('header') -%>
+
+
+    <div class="text-center center-div" id="feedback">
+        <div class="container w-40 border py-5">
+            <h2 class="font-weight-bold">Statistici evaluari</h2>
+            <div>
+                <br>
+                <div name="feedback">
+                    <p>Cel mai evaluat profesor este <b><%=celMaiEvaluat_ProfFirstName%> <%=celMaiEvaluat_ProfLastName%></b>, acesta are un total de <b><%= nrEvaluari %></b> evaluari.</p>
+                    <p><b><%=ceaMaiMareNota_ProfFirstName %> <%=ceaMaiMareNota_ProfLastName %></b> este profesorul cu cea mai buna evaluare, nota medie a acestuia este <b><%=notaMareFinala %></b>.</p>
+                    <p><b><%=ceaMaiMicaNota_ProfFirstName %> <%=ceaMaiMicaNota_ProfLastName %></b> este profesorul cu cea mai proasta evaluare, nota medie a acestuia este <b><%=notaMicaFinala %></b>.</p>
+                    <p>Procentul profesorilor evaluati este de <b><%=procentProfesoriEvaluati %>%</b>. Au fost evaluati <b><%=idProfesoriEvaluatiLength %></b> profesori din <b><%=allProfessorsLength %></b>.</p>
+                    <p>Procentul studentilor evaluatori este de <b><%=procentStudentiEvaluatori %>%</b>. <b><%=idStudentiEvaluatoriLength %></b> studenti din <b><%=allStudentsLength %></b> au trimis o evaluare.</p>
+                </div>
+            </div>
+            </form><br>
+            <a href="/route/allFeedbacks" class="btn btn-success rounded-pill">Inapoi</a>
+            <br><br>
+            <a href="/route/logout" class="btn btn-success rounded-pill">Logout</a>
+        </div>
+    </div>
+
+
+    <%- include('footer') -%>
