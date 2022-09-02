@@ -1,0 +1,30 @@
+<%- include('header') -%>
+
+<div class="text-center  mt-5" id="login">
+    <div class="container w-25 border py-5 ">
+        <div class="title pb-5">
+            <h2 class="font-weight-bold">Importuri </h2>
+            <% if(locals.txt){ %>
+                <div class=" alert-success text-center">
+                    <%= txt %>
+                </div>
+                <% } %>
+        </div>
+        <h3>Alegeti tabela pe care vreti sa o importati:</h3><br>
+        <a href="/route/importStudenti" class="btn btn-success rounded-pill">Importati tabela cu studenti</a> 
+        <br><br>
+        <a href="/route/importProfesori" class="btn btn-success rounded-pill">Importati tabela cu profesori</a> 
+        <br><br>
+        <a href="/route/importIntrebari" class="btn btn-success rounded-pill">Importati tabela cu intrebarile</a> 
+        <br><br>
+        <a href="/route/importPlan" class="btn btn-success rounded-pill">Importati tabela cu planul universitar</a> 
+        <br><br>
+        <a href="/route/importAdmini" class="btn btn-success rounded-pill">Importati tabela cu admini</a> 
+        <br><br>
+        <a href="/route/dashboard" class="btn btn-success rounded-pill">Inapoi</a>
+        <br><br>
+        <a href="/route/logout" class="btn btn-success rounded-pill">Logout</a>
+    </div>
+</div>
+
+<%- include('footer') -%>

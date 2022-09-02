@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const xlsx = require('xlsx');
-const { getExcel, getFeedback } = require('../controllers/users');
+const { getExcel, getFeedback, clown } = require('../controllers/exportExcel');
 const { sequelize } = require("../models");
 const db = require("../models");
 const authorizationMiddleware = require("../middleware/authorization")
@@ -13,6 +13,14 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const excelJS = require("exceljs");
 
+router.get("/import", authorizationMiddleware, async (req, res) => {
+    let userType = req.body.userType
+    if (userType === "conducere") {
+        const conducere = await db.Admin.findByPk(req.body.userId);
+        res.render("importuri", { body: conducere })
+    } else { res.send("smth went wrong") }
+})
+
 //import profesori
 router.get('/importProfesori', async (req, res) => {
     var workbook = new excelJS.Workbook();
@@ -20,7 +28,7 @@ router.get('/importProfesori', async (req, res) => {
         .then(function () {
             var worksheet = workbook.getWorksheet('Lista Profesori')
             worksheet.eachRow({ includeEmpty: false }, async function (row, rowNumber) {
-                try {
+                try { //add info in db
                     await db.Professor.create({ id: parseInt(row.values[1]), firstName: String(row.values[2]), lastName: String(row.values[3]), email: String(row.values[4]), password: String(row.values[5]), userType: String(row.values[6]), createdAt: new Date(), updatedAt: new Date() })
                 } catch (e) { console.error(e) }
             });
@@ -30,7 +38,7 @@ router.get('/importProfesori', async (req, res) => {
         const ll = last.length - 1
         await db.Professor.destroy({ where: { id: last[ll]['dataValues']['id'] } })
     }, 10000)
-    res.send("Gata frt")
+    res.render("importuri", { txt: "Ati importat cu succes tabela cu profesori!" })
 })
 
 //import admini
@@ -51,7 +59,7 @@ router.get('/importAdmini', async (req, res) => {
         await db.Admin.destroy({ where: { id: last[ll]['dataValues']['id'] } })
     }, 10000)
 
-    res.send("Gata frt")
+    res.render("importuri", { txt: "Ati importat cu succes tabela cu admini!" })
 })
 
 //import plan
@@ -71,7 +79,7 @@ router.get('/importPlan', async (req, res) => {
         const ll = last.length - 1
         await db.Subject.destroy({ where: { id: last[ll]['dataValues']['id'] } })
     }, 10000)
-    res.send("Gata frt")
+    res.render("importuri", { txt: "Ati importat cu succes planul universitar!" })
 })
 
 //import intrebari
@@ -91,7 +99,7 @@ router.get('/importIntrebari', async (req, res) => {
         const ll = last.length - 1
         await db.Question.destroy({ where: { id: last[ll]['dataValues']['id'] } })
     }, 10000)
-    res.send("Gata frt")
+    res.render("importuri", { txt: "Ati importat cu succes tabela cu intrebari!" })
 })
 
 //import studenti
@@ -112,11 +120,11 @@ router.get('/importStudenti', async (req, res) => {
         const ll = last.length - 1
         await db.Student.destroy({ where: { id: last[ll]['dataValues']['id'] } })
     }, 10000)
-    res.send("Da frate")
+    res.render("importuri", { txt: "Ati importat cu succes tabela cu studenti!" })
 })
 
 //export excel
-router.get('/export', authorizationMiddleware, getExcel)
+router.get('/export', authorizationMiddleware, getFeedback)
 
 //export feedback
 router.get('/feedback', authorizationMiddleware, getFeedback)
@@ -238,7 +246,8 @@ router.post('/modificareParola', authorizationMiddleware, async (req, res) => {
                     if (err) {
                         console.error(err);
                     }
-                    db.Student.update({ password: hash }, { where: { id: req.body.userId } });
+                    db.Student.update({ password: hash },
+                        { where: { id: req.body.userId } });
                 })
             } else
                 console.error("Parolele noi nu coincid!")
@@ -341,8 +350,6 @@ router.post('/modificareParola', authorizationMiddleware, async (req, res) => {
 //route for dashboard
 router.get('/dashboard', authorizationMiddleware, async (req, res) => {
     let userType = req.body.userType
-
-
     if (userType === "student") {
         const student = await db.Student.findByPk(req.body.userId);
         res.render("studentDashboard", { body: student })
@@ -499,15 +506,15 @@ router.get('/statistici', authorizationMiddleware, async (req, res) => {
                 notaMicaFinala = nota
                 id_ceaMaiMicaNota = idProfesoriEvaluati[i]
             }
-            nrrEvaluari=0
-            sumEvaluari=0
+            nrrEvaluari = 0
+            sumEvaluari = 0
         }
         const procentProfesoriEvaluati = idProfesoriEvaluati.length / allProfessors.length * 100
         const procentStudentiEvaluatori = idStudentiEvaluatori.length / allStudents.length * 100
         const celMaiEvaluat_Prof = await db.Professor.findByPk(id_celeMaiMulteEvaluari)
         const ceaMaiMareNota_Prof = await db.Professor.findByPk(id_ceaMaiMareNota)
         const ceaMaiMicaNota_Prof = await db.Professor.findByPk(id_ceaMaiMicaNota)
-        
+
 
         res.render('statisticiEvaluari', {
             celMaiEvaluat_ProfFirstName: celMaiEvaluat_Prof.firstName, celMaiEvaluat_ProfLastName: celMaiEvaluat_Prof.lastName, nrEvaluari,
@@ -549,7 +556,7 @@ router.get("/profesori/:materie", authorizationMiddleware, async (req, res) => {
                 let profesor = await db.Professor.findByPk(id_profesor)
                 let Q = await db.Question.findAll()
                 res.render('chestionar', { idProfessor: profesor.id, firstNameProfessor: profesor.firstName, lastNameProfessor: profesor.lastName, Q: Q });
-            }else res.send("<h1>Aveti acces doar la cursurile grupei de care apartineti!!</h1>");
+            } else res.send("<h1>Aveti acces doar la cursurile grupei de care apartineti!!</h1>");
         } catch (e) {
             res.send(e);
         }

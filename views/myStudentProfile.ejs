@@ -17,20 +17,17 @@
                 <br>
                 <a href="/route/logout" class="btn btn-success rounded-pill">Logout</a>
 
-                <div class="container  py-5 mt-5">
+                <div class="container mt-5">
                         <h4>Schimbare parola</h4>
 
                         <br>
                         <div>
                                 Parola veche:
-                                <input id="parolaVeche" class="form-control" type="password"
-                                        placeholder="Parola veche"><br>
+                                <input id="parolaVeche" type="password" placeholder="Parola veche"><br><br>
                                 Parola noua:
-                                <input id="parolaNoua1" class="form-control" type="password"
-                                        placeholder="Parola noua"><br>
+                                <input id="parolaNoua1" type="password" placeholder="Parola noua"><br><br>
                                 Parola noua:
-                                <input id="parolaNoua2" class="form-control" type="password"
-                                        placeholder="Parola noua"><br>
+                                <input id="parolaNoua2" type="password" placeholder="Parola noua"><br><br>
                                 <br>
                         </div>
 
@@ -61,7 +58,8 @@
                                         },
                                         body: JSON.stringify(inputs)
                                 })
-                        window.location.href = 'http://localhost:3000/route/myStudentProfile'
+                        console.log("dabafrt")
+                        window.location.href = 'http://localhost:3000/route/dashboard'
                 }
 
         </script>

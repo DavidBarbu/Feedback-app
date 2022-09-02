@@ -1,16 +1,30 @@
 <%- include('header') -%>
 
-    <div class="text-center center-div mt-5" id="login">
+    <div class="text-center " id="login">
         <div class="container w-25 border py-5 mt-5">
             <h3>Pentru anul dumneavoastra de studiu (anul <%=student.year%>, grupa <%=student.class%>) aveti urmatoarele
                         optiuni:</h3>
+                        <br>
 
-            <div>
+            <div><h4>Semestrul 1:</h4><br>
                 <% for( var i=0; i < materii.length; i++) { %>
+                    <% if(materii[i]['dataValues']['semestru']==1) { %>
                     <p>
                         <a href="/route/profesori/<%= materii[i]['dataValues']['nume_materie']%>">
                                 <%= materii[i]['dataValues']['nume_materie']%></a>
                     </p>
+                    <% } %>
+                    <% } %>
+            </div>
+
+            <div><br><h4>Semestrul 2:</h4><br>
+                <% for( var i=0; i < materii.length; i++) { %>
+                    <% if(materii[i]['dataValues']['semestru']==2) { %>
+                    <p>
+                        <a href="/route/profesori/<%= materii[i]['dataValues']['nume_materie']%>">
+                                <%= materii[i]['dataValues']['nume_materie']%></a>
+                    </p>
+                    <% } %>
                     <% } %>
             </div>
             <a href="/route/dashboard" class="btn btn-success rounded-pill">Inapoi</a>

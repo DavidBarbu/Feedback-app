@@ -160,7 +160,7 @@ module.exports.getExcel = async (req, res) => {
             "Content-Type",
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         );
-        res.setHeader("Content-Disposition", `attachment; filename=users.xlsx`);
+        res.setHeader("Content-Disposition", `attachment; filename=Export.xlsx`);
 
         return workbook.xlsx.write(res).then(() => {
             res.status(200);
@@ -175,6 +175,7 @@ module.exports.getExcel = async (req, res) => {
         });
     }
 }
+
 module.exports.getFeedback = async (req, res) => {
     const workbook = new excelJS.Workbook();
     const worksheetFeedbacks = workbook.addWorksheet("Lista Feedbacks");
@@ -221,7 +222,7 @@ module.exports.getFeedback = async (req, res) => {
             "Content-Type",
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         );
-        res.setHeader("Content-Disposition", `attachment; filename=feedbacks.xlsx`);
+        res.setHeader("Content-Disposition", `attachment; filename=Feedbacks.xlsx`);
 
         return workbook.xlsx.write(res).then(() => {
             res.status(200);
@@ -235,4 +236,9 @@ module.exports.getFeedback = async (req, res) => {
             message: "Something went wrong",
         });
     }
+}
+
+module.exports.clown = async (req, res) => {
+    res.send("<h1>🤡🤡🤡<h1>")
+
 }

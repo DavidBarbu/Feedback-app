@@ -9,7 +9,7 @@
                     <div class=" alert-success text-center">
                         <%= txt %>
                     </div>
-                <% } %>
+                    <% } %>
             </div>
             <form>
                 <div class="form-group">
@@ -20,7 +20,7 @@
                 <div class="form-group">
                     <input id="password" type="password" class="form-control" name="password" placeholder="password">
                 </div>
-                
+
                 <button id="get" class="btn btn-success rounded-pill">Login</button>
                 <!-- <a href='/route/dashboard' class="btn btn-success rounded-pill">Dashboard</a> -->
             </form>
@@ -44,6 +44,7 @@
                             },
                             body: JSON.stringify(cred)
                         })
+                    console.log("dabafrt")
                     window.location.href = 'http://localhost:3000/route/dashboard'
                 }
 
