@@ -1,5 +1,13 @@
 <%- include('header') -%>
         <div class="text-center mt-5">
+                <div class="title pb-5">
+                        <h2 class="font-weight-bold">Importuri </h2>
+                        <% if(locals.txt){ %>
+                            <div class=" alert-success text-center">
+                                <%= txt %>
+                            </div>
+                            <% } %>
+                    </div>
                 <h3>Nume: <%= profile.firstName%>
                 </h3>
                 <h3>Prenume: <%= profile.lastName%>

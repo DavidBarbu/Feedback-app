@@ -30,6 +30,7 @@ router.get('/importProfesori', async (req, res) => {
             worksheet.eachRow({ includeEmpty: false }, async function (row, rowNumber) {
                 try { //add info in db
                     await db.Professor.create({ id: parseInt(row.values[1]), firstName: String(row.values[2]), lastName: String(row.values[3]), email: String(row.values[4]), password: String(row.values[5]), userType: String(row.values[6]), createdAt: new Date(), updatedAt: new Date() })
+                    console.log( "cu succes");
                 } catch (e) { console.error(e) }
             });
         });
@@ -71,6 +72,7 @@ router.get('/importPlan', async (req, res) => {
             worksheet.eachRow({ includeEmpty: false }, async function (row, rowNumber) {
                 try {
                     await db.Subject.create({ id: parseInt(row.values[1]), nume_materie: String(row.values[2]), grupa: parseInt(row.values[3]), semestru: parseInt(row.values[4]), id_profesor: parseInt(row.values[5]), createdAt: new Date(), updatedAt: new Date() })
+                    console.log( "cu succes");
                 } catch (e) { console.error(e) }
             });
         });
@@ -124,7 +126,7 @@ router.get('/importStudenti', async (req, res) => {
 })
 
 //export excel
-router.get('/export', authorizationMiddleware, getFeedback)
+router.get('/export', authorizationMiddleware, getExcel)
 
 //export feedback
 router.get('/feedback', authorizationMiddleware, getFeedback)
@@ -248,6 +250,7 @@ router.post('/modificareParola', authorizationMiddleware, async (req, res) => {
                     }
                     db.Student.update({ password: hash },
                         { where: { id: req.body.userId } });
+                    res.render("myStudentProfile", { txt: "Parola schimbata cu succes!"})
                 })
             } else
                 console.error("Parolele noi nu coincid!")
@@ -493,8 +496,25 @@ router.get('/statistici', authorizationMiddleware, async (req, res) => {
         for (let i = 0; i < idProfesoriEvaluati.length; i++) {
             for (let j = 0; j < allFeedbacks.length; j++) {
                 if (allFeedbacks[j]['dataValues']['id_profesor'] == idProfesoriEvaluati[i]) {
-                    nrrEvaluari++
-                    sumEvaluari += parseInt(allFeedbacks[j]['dataValues']['raspuns'])
+                    var raspuns = allFeedbacks[j]['dataValues']['raspuns'];
+                    if (typeof raspuns === 'number') {
+                        // Value is an integer
+                        nrrEvaluari++
+                        sumEvaluari += parseInt(allFeedbacks[j]['dataValues']['raspuns'])
+                        console.log('Value is an integer:', raspuns);
+                      } else if (typeof raspuns === 'string') {
+                        // Value is a string
+                        nrrEvaluari++
+                        sumEvaluari += parseInt(allFeedbacks[j]['dataValues']['raspuns'])
+                        console.log('Value is a string:', raspuns);
+                      } else if (raspuns === null) {
+                        // Value is null
+                        console.log('Value is null');
+                      } else {
+                        // Value is of another type
+                        console.log('Value is of another type:', raspuns);
+                      }
+                    
                 }
             }
             nota = sumEvaluari / nrrEvaluari
@@ -509,8 +529,14 @@ router.get('/statistici', authorizationMiddleware, async (req, res) => {
             nrrEvaluari = 0
             sumEvaluari = 0
         }
-        const procentProfesoriEvaluati = idProfesoriEvaluati.length / allProfessors.length * 100
-        const procentStudentiEvaluatori = idStudentiEvaluatori.length / allStudents.length * 100
+        let procentProfesoriEvaluati = idProfesoriEvaluati.length / allProfessors.length * 100;
+        if (procentProfesoriEvaluati % 1 !== 0) {
+        procentProfesoriEvaluati = procentProfesoriEvaluati.toFixed(2);
+        }
+        let procentStudentiEvaluatori = idStudentiEvaluatori.length / allStudents.length * 100;
+        if (procentStudentiEvaluatori % 1 !== 0) {
+        procentStudentiEvaluatori = procentStudentiEvaluatori.toFixed(2);
+        }
         const celMaiEvaluat_Prof = await db.Professor.findByPk(id_celeMaiMulteEvaluari)
         const ceaMaiMareNota_Prof = await db.Professor.findByPk(id_ceaMaiMareNota)
         const ceaMaiMicaNota_Prof = await db.Professor.findByPk(id_ceaMaiMicaNota)
@@ -728,7 +754,7 @@ router.post("/questions", authorizationMiddleware, async (req, res) => {
             console.error('Error on updating user: ', error);
         }
         const questions = await db.Question.findAll()
-        res.send({ questions })
+        res.render('questions', { questions: questions });
     } else res.send("<h1>Nu aveti acces!!</h1>");
 })
 
